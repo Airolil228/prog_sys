@@ -1,0 +1,10 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <time.h> 
+#include <sys/wait.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
