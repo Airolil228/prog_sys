@@ -13,19 +13,26 @@ int main(int argc, char *argv[],char *envp[]){
     nb_fils = atoi(argv[1]);
     nb_op = atoi(argv[2]);
     id_shm = atoi(argv[3]);
-    id_sem = atoi(argv[4]);
+    //id_sem = atoi(argv[4]);
     id_fils = atoi(argv[5]);
 
     //attachement au segment memoire partagé
     int * adr_at = (int *) shmat(id_shm,NULL,0);
     if( adr_at == (int *) -1){
-        perror("shmat failed"); 
+        perror("fils1:shmat failed"); 
+        exit(EXIT_FAILURE);
+    }
+
+    key_t cle = ftok("fichier",'A');
+    if(cle == -1){
+        perror("fils1:ftok failed");
+        shmdt(adr_at);
         exit(EXIT_FAILURE);
     }
 
     // Accès au semaphore 
-    if( semget(id_sem,1,0) == -1 ){
-        perror("shmet err");
+    if( semget(cle,1,0) == -1 ){
+        perror("fils1:shmget err");
         shmdt(adr_at);
         exit(EXIT_FAILURE); 
     }
