@@ -27,6 +27,9 @@ int main(int argc, char* argv[]){
     struct msgbuf *msg;
     ssize_t reception;
     int envoi;
+    int vendeur_recommande;
+    int temps;
+    srand(time(NULL));
     
 
     /* Recup de la file de messages */
@@ -60,7 +63,7 @@ int main(int argc, char* argv[]){
     }
 
     while (!sigusr1recu){
-        reception = msgrcv(msgid, &msg, sizeof(msg), 0, 0);
+        reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
         
         if (reception == -1){
             perror("Erreur msgrcv");
@@ -73,26 +76,55 @@ int main(int argc, char* argv[]){
         if (!(rayon_competence = msg->rayon)){
             // Répondre pas mon rayon + id d'un autre vendeur
             msg->mtype = msg->client_id; // Reponse vers le client
-            //msg->vendeur_reco = 0;  // Vendeur à recommander à déterminer
+            vendeur_recommande = num_vendeur + 1;
+            if (vendeur_recommande >= m.nb_vendeurs){ // NB_vendeur > tout num vendeur car num vendeur va de 0 à NB_VENDEUR - 1 normalement
+                vendeur_recommande = 0;
+            }
+            msg->vendeur_reco = vendeur_recommande;  // Vendeur à recommander à déterminer
             envoi = msgsnd(msgid, &msg, sizeof(msg),0);
 
             if (envoi == -1){
                 perror("Erreur msgsnd");
-
-                // Retour à l'attente d'un autre client
             }
+            // Retour à l'attente d'un autre client -> Fin du tour
         }else{
             // tire un temps aléatoire
-            // sleep(temps);
+            temps = rand() % 5 + 1; // Temps de 1 à 5 sec
+            sleep(temps);
+
             // reveil le client (message)
+            msg->mtype = msg->client_id; // Reponse vers le client
+            envoi = msgsnd(msgid, &msg, sizeof(msg),0);
+
+            if (envoi == -1){
+                perror("Erreur msgsnd");
+                exit(EXIT_FAILURE);
+            }
 
             // Décision du client :
             // Attendre la réponse msgrcv
-            // Si vente refusée -> fin 
-            // Si vente accepté ->
-            // Tirer montant aléatoire
-            // Envoyer aux caissiers
+            reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
 
+            if (reception == -1){
+                perror("Erreur msgrcv");
+                exit(EXIT_FAILURE);
+            }
+
+            if (msg->decision == 0){
+                // Si vente refusée -> fin
+            }else{
+                // Si vente accepté ->
+                // Tirer montant aléatoire
+                msg->montant = rand() % (MONTANT_MAX - MONTANT_MIN + 1) + MONTANT_MIN;
+                // Envoyer aux caissiers
+                msg->mtype = 10000; // type commun pour les caissiers
+                envoi = msgsnd(msgid, &msg, sizeof(msg),0);
+
+                if (envoi == -1){
+                    perror("Erreur msgsnd");
+                    exit(EXIT_FAILURE);
+                }
+            }
             // Fin avec ce client retour étape 1
         }
     }

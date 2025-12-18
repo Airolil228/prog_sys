@@ -18,6 +18,9 @@
 #define NB_CHAR_EXEC 16
 #define NB_RAYON 10
 
+#define MONTANT_MAX 100
+#define MONTANT_MIN 10
+
 int nb_rayon_inoccupe;
 int tab_rayon_inoccupe[NB_RAYON];
 
@@ -38,6 +41,6 @@ struct msgbuf {
     int vendeur_reco;    // vendeur recommandé si pas bon rayon
     int decision;        // 0 = refuse, 1 = accepte
     int montant;
-}
+};
 
 struct sigaction action;
