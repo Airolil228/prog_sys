@@ -16,6 +16,7 @@ int main(int argc, char* argv[]){
     m.nb_clients = atoi(argv[3])+1;
 
     key_t key = (key_t)atoi(argv[5]);
+    
 
     /* Recup de la file de messages */
     int msgid = msgget(key, 0666 | IPC_CREAT);
