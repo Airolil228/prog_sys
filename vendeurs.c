@@ -25,6 +25,8 @@ int main(int argc, char* argv[]){
 
     key_t key = (key_t)atoi(argv[5]);
     struct msgbuf *msg;
+    ssize_t reception;
+    int envoi;
     
 
     /* Recup de la file de messages */
@@ -58,9 +60,9 @@ int main(int argc, char* argv[]){
     }
 
     while (!sigusr1recu){
-        ssize_t r = msgrcv(msgid, &msg, sizeof(msg), 0, 0);
+        reception = msgrcv(msgid, &msg, sizeof(msg), 0, 0);
         
-        if (r == -1){
+        if (reception == -1){
             perror("Erreur msgrcv");
             break;
         }
@@ -68,8 +70,17 @@ int main(int argc, char* argv[]){
         // Traitement du message
         printf("Reçu: %s\n", msg);
 
-        if (!(rayon_competence = atoi(msg))){
+        if (!(rayon_competence = msg->rayon)){
             // Répondre pas mon rayon + id d'un autre vendeur
+            msg->mtype = msg->client_id; // Reponse vers le client
+            //msg->vendeur_reco = 0;  // Vendeur à recommander à déterminer
+            envoi = msgsnd(msgid, &msg, sizeof(msg),0);
+
+            if (envoi == -1){
+                perror("Erreur msgsnd");
+
+                // Retour à l'attente d'un autre client
+            }
         }else{
             // tire un temps aléatoire
             // sleep(temps);

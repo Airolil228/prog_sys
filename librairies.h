@@ -33,7 +33,11 @@ typedef struct {
 
 struct msgbuf {
     long mtype ;
-    char mtext [100];
+    int client_id;
+    int rayon;
+    int vendeur_reco;    // vendeur recommandé si pas bon rayon
+    int decision;        // 0 = refuse, 1 = accepte
+    int montant;
 }
 
 struct sigaction action;
