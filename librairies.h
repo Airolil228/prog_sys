@@ -25,7 +25,6 @@
 #define PROBA_ACHAT 60
 #define TAILLE 1026
 
-
 int nb_rayon_inoccupe;
 int tab_rayon_inoccupe[NB_RAYON];
 
@@ -69,7 +68,7 @@ typedef struct { //
     int nb_clients;
 
     InfoClient tab_clients[100];
-    
+
     int SimulationActive; 
 }magasin;
 
@@ -80,6 +79,9 @@ struct msgbuf {
     int vendeur_reco;    // vendeur recommandé si pas bon rayon
     int decision;        // 0 = refuse, 1 = accepte
     int montant;
+    int num_vendeur;
+    int num_caissier; 
+    int type_message;    // REPONSE/DEMANDE 
 };
 
-struct sigaction action;
+struct sigaction action;:
