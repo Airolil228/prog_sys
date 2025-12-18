@@ -12,6 +12,14 @@ void usage(char * appel){
     exit(EXIT_FAILURE);
 }
 
+void fonc_dest(char *shm_ptr,int shmid,int msgid){
+    shmdt(shm_ptr);//Détachement  
+    shmctl(shmid, IPC_RMID, NULL);//Destruction
+
+     
+    msgctl(msgid, IPC_RMID, NULL);// Destruction file de message
+}
+
 int main(int argc, char* argv[]){
     if (argc != 4){
         usage(argv[0]);
@@ -27,7 +35,9 @@ int main(int argc, char* argv[]){
     char str_nb_caissiers[NB_CHAR_EXEC];
     char str_nb_clients[NB_CHAR_EXEC];
     key_t key; char str_key[NB_CHAR_EXEC];
+    char *shm_ptr;//L'espace mémoire de procecessus 
     int msgid;
+    int shmid; // seg.mem.part CLIENT <=> VENDEUR et CLIENT <=> CASIER
 
     // Initialisation des rayons inoccupés pour s'assurer qu'ils sont tous occupés
     nb_rayon_inoccupe = NB_RAYON;
@@ -74,15 +84,29 @@ int main(int argc, char* argv[]){
         return 1;
     }
 
+    //Creation de seg.mémoire.partagé
+    if( shmid = shmget(key,sizeof(TAILLE),IPC_CREAT | 0666) ){
+        perror("erreur shmget");
+        exit(EXIT_FAILURE);
+    }
+
+    // Attacher le segment au processus 
+    if( shm_ptr = shmat(shmid,NULL,0) ){
+        perror("erreur shmat");
+        exit(-1);
+    }
+     
+    //UTILISATION 
+
 
     for (i=0; i<m.nb_vendeurs;i++){
 
-        m.tab_vendeurs[i] = fork();
+        m.tab_vendeurs[i].pid = fork();
             
-        if( m.tab_vendeurs[i] < -1){
+        if( m.tab_vendeurs[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");
             exit(EXIT_FAILURE);
-        }else if( m.tab_vendeurs[i] == 0 ){
+        }else if( m.tab_vendeurs[i].pid == 0 ){
             printf("Vendeur créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
@@ -187,15 +211,12 @@ int main(int argc, char* argv[]){
     // Détruire les IPCs
 
     for (j=0; j<m.nb_vendeurs;j++){
-        kill(m.tab_vendeurs[j], SIGUSR1);
+        kill(m.tab_vendeurs[j].pid, SIGUSR1);
     }
     for (j=0; j<m.nb_caissiers;j++){
         kill(m.tab_caissiers[j], SIGUSR1);
     }
 
-
-    // Destruction file de message
-    msgctl(msgid, IPC_RMID, NULL);
-
+    fonc_dest(shm_ptr,shmid,msgid); 
     exit(EXIT_SUCCESS);
 }

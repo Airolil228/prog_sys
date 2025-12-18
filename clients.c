@@ -19,6 +19,7 @@ int main(int argc, char* argv[]){
 
     /* Recup de la file de messages */
     int msgid = msgget(key, 0666 | IPC_CREAT);
+
     if (msgid == -1){
         perror("Erreur msgget");
         return 1;
@@ -26,7 +27,7 @@ int main(int argc, char* argv[]){
 
     srand(time(NULL));
 
-    int num_caisse = rand() % NB_RAYON + 1;
+    int num_rayon = rand() % NB_RAYON + 1;
 
 
     if (sigaction(SIGUSR1, &action, NULL) < 0) {
