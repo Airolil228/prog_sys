@@ -29,6 +29,13 @@ int main(int argc, char* argv[]){
     int envoi;
     int vendeur_recommande;
     int temps;
+
+    struct sigaction sa;
+
+    sa.sa_handler = arret;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
     srand(time(NULL));
     
 
@@ -50,13 +57,6 @@ int main(int argc, char* argv[]){
     }
 
 
-    struct sigaction sa;
-
-    sa.sa_handler = arret;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-
-
     if (sigaction(SIGUSR1, &sa, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
@@ -76,8 +76,8 @@ int main(int argc, char* argv[]){
             // Répondre pas mon rayon + id d'un autre vendeur
             msg->mtype = msg->client_id; // Reponse vers le client
             vendeur_recommande = num_vendeur + 1;
-            if (vendeur_recommande >= m.nb_vendeurs){ // NB_vendeur > tout num vendeur car num vendeur va de 0 à NB_VENDEUR - 1 normalement
-                vendeur_recommande = 0;
+            if (vendeur_recommande > m.nb_vendeurs){ // NB_vendeur > tout num vendeur car num vendeur va de 0 à NB_VENDEUR - 1 normalement
+                vendeur_recommande = 1;
             }
             msg->vendeur_reco = vendeur_recommande;  // Vendeur à recommander à déterminer
             envoi = msgsnd(msgid, &msg, sizeof(msg),0);

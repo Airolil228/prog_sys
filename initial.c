@@ -29,6 +29,13 @@ int main(int argc, char* argv[]){
     key_t key; char str_key[NB_CHAR_EXEC];
     int msgid;
 
+    struct sigaction sa;
+
+    sa.sa_handler = arret;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+
     // Initialisation des rayons inoccupés pour s'assurer qu'ils sont tous occupés
     nb_rayon_inoccupe = NB_RAYON;
     for (i=0;i<NB_RAYON;i++){
@@ -85,7 +92,7 @@ int main(int argc, char* argv[]){
         }else if( m.tab_vendeurs[i] == 0 ){
             printf("Vendeur créé : %d \n", getpid());
             
-            sprintf(num_creation, "%d", i);
+            sprintf(num_creation, "%d", i+1);
 
             char * args[] = {"./vendeurs", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
 
@@ -163,12 +170,6 @@ int main(int argc, char* argv[]){
     fprintf(stderr,"\n");
 
 
-
-    struct sigaction sa;
-
-    sa.sa_handler = arret;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
 
     fprintf(stderr," Attente du kill de %d pour terminer \n", getpid());
     if (sigaction(SIGTERM, &sa, NULL) < 0) {

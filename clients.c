@@ -28,6 +28,12 @@ int main(int argc, char* argv[]){
     ssize_t reception;
     int envoi;
 
+    struct sigaction sa;
+
+    sa.sa_handler = arret;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
     /* Recup de la file de messages */
     int msgid = msgget(key, 0666 | IPC_CREAT);
     if (msgid == -1){
@@ -39,13 +45,7 @@ int main(int argc, char* argv[]){
 
     int num_rayon = rand() % NB_RAYON; // Entre 0 et 9 
 
-    int num_vendeur = rand() % m.nb_vendeurs; // Entre 0 et nb_vendeur -1   /   Ou on peut aussi récuperer le vendeur le moins occupé 
-    
-    struct sigaction sa;
-
-    sa.sa_handler = arret;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
+    int num_vendeur = rand() % (m.nb_vendeurs + 1) + 1; //Ou on peut aussi récuperer le vendeur le moins occupé 
 
 
     if (sigaction(SIGUSR1, &sa, NULL) < 0) {
