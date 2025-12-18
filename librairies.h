@@ -31,4 +31,9 @@ typedef struct {
     pid_t tab_clients[100];
 }magasin;
 
+struct msgbuf {
+    long mtype ;
+    char mtext [100];
+}
+
 struct sigaction action;

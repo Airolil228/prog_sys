@@ -1,5 +1,12 @@
 #include "librairies.h"
 
+int sigusr1recu = 0; 
+
+void arret(int sig){
+    printf("signal %d (TERM) reçu \n", sig); 
+    sigusr1recu++;
+}
+
 void usage(char * appel){
     fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num vendeur> <clef file de message> \n", appel);
     exit(EXIT_FAILURE);
@@ -17,6 +24,8 @@ int main(int argc, char* argv[]){
     m.nb_clients = atoi(argv[3])+1;
 
     key_t key = (key_t)atoi(argv[5]);
+    struct msgbuf *msg;
+    
 
     /* Recup de la file de messages */
     int msgid = msgget(key, 0666 | IPC_CREAT);
@@ -36,13 +45,45 @@ int main(int argc, char* argv[]){
     }
 
 
-    if (sigaction(SIGUSR1, &action, NULL) < 0) {
+    struct sigaction sa;
+
+    sa.sa_handler = arret;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
     }
 
-    while (1){
-        pause();
+    while (!sigusr1recu){
+        ssize_t r = msgrcv(msgid, &msg, sizeof(msg), 0, 0);
+        
+        if (r == -1){
+            perror("Erreur msgrcv");
+            break;
+        }
+
+        // Traitement du message
+        printf("Reçu: %s\n", msg);
+
+        if (!(rayon_competence = atoi(msg))){
+            // Répondre pas mon rayon + id d'un autre vendeur
+        }else{
+            // tire un temps aléatoire
+            // sleep(temps);
+            // reveil le client (message)
+
+            // Décision du client :
+            // Attendre la réponse msgrcv
+            // Si vente refusée -> fin 
+            // Si vente accepté ->
+            // Tirer montant aléatoire
+            // Envoyer aux caissiers
+
+            // Fin avec ce client retour étape 1
+        }
     }
 
     exit(EXIT_SUCCESS);
