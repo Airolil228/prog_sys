@@ -93,6 +93,7 @@ int main(int argc, char* argv[]){
 
             // reveil le client (message)
             msg->mtype = msg->client_id; // Reponse vers le client
+            msg->vendeur_reco = num_vendeur; // Permet de bien montrer qu'on reste avec le meme vendeur
             envoi = msgsnd(msgid, &msg, sizeof(msg),0);
 
             if (envoi == -1){

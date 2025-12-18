@@ -27,6 +27,7 @@ int main(int argc, char* argv[]){
     struct msgbuf *msg;
     ssize_t reception;
     int envoi;
+    int stop = 1;
 
     struct sigaction sa;
 
@@ -53,7 +54,10 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
-    while (!sigusr1recu){
+    while (!sigusr1recu && stop){
+
+
+
         // Il prend le vendeur désigné et lui fait savoir son rayon
         msg->mtype = num_vendeur;   // vendeur ciblé
         msg->client_id = num_client;
@@ -68,6 +72,46 @@ int main(int argc, char* argv[]){
         // En attente de la réponse du vendeur
         reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
         
+        if (reception == -1){
+            perror("Erreur msgrcv");
+            exit(EXIT_FAILURE);
+        }
+
+        if (msg->vendeur_reco != num_vendeur){
+            num_vendeur = msg->vendeur_reco;
+
+            // Fin pour ce tour, le vendeur n'est pas le bon.
+        }else{
+
+
+            // Le vendeur passe un certain temps avant de repondre puis redeclenche la procédure
+            reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
+        
+            if (reception == -1){
+                perror("Erreur msgrcv");
+                exit(EXIT_FAILURE);
+            }
+
+            // Decision 1 ou 0
+            if ((rand() % 101) > PROBA_ACHAT){
+                msg->decision = 1;
+            }else{
+                msg->decision = 0;
+            }
+            envoi = msgsnd(msgid, &msg, sizeof(msg),0);
+
+            if (envoi == -1){
+                perror("Erreur msgsnd");
+                exit(EXIT_FAILURE);
+            }
+
+            if (msg->decision == 0){
+                stop = 1;
+            }else{
+                // S'occuper avec le caissier
+            }
+
+        }
     }
 
     exit(EXIT_SUCCESS);

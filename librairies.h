@@ -21,6 +21,8 @@
 #define MONTANT_MAX 100
 #define MONTANT_MIN 10
 
+#define PROBA_ACHAT 60
+
 int nb_rayon_inoccupe;
 int tab_rayon_inoccupe[NB_RAYON];
 
