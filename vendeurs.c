@@ -71,7 +71,6 @@ int main(int argc, char* argv[]){
         }
 
         // Traitement du message
-        printf("Reçu: %s\n", msg);
 
         if (!(rayon_competence = msg->rayon)){
             // Répondre pas mon rayon + id d'un autre vendeur
