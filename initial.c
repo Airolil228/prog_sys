@@ -78,7 +78,7 @@ int main(int argc, char* argv[]){
     /* Génération d'une clé unique */
     key = ftok(".",'M');
     if (key == 1){
-        perror("Erreur ftok");
+        perror("Erreur ftok : Ligne 81");
         return 1;
     }
 
@@ -87,19 +87,23 @@ int main(int argc, char* argv[]){
     /* Création de la file de messages */
     msgid = msgget(key, 0666 | IPC_CREAT);
     if (msgid == -1){
-        perror("Erreur msgget");
+        perror("Erreur msgget : Ligne 90");
         return 1;
     }
 
     //Creation de seg.mémoire.partagé
-    if( shmid = shmget(key,sizeof(TAILLE),IPC_CREAT | 0666) ){
-        perror("erreur shmget");
+    shmid = shmget(key,sizeof(TAILLE),IPC_CREAT | 0666);
+
+    if (shmid == -1){
+        perror("erreur shmget : Ligne 98 ");
         exit(EXIT_FAILURE);
     }
 
     // Attacher le segment au processus 
-    if( shm_ptr = shmat(shmid,NULL,0) ){
-        perror("erreur shmat");
+    shm_ptr = shmat(shmid,NULL,0);
+
+    if (shm_ptr == (char*)-1){
+        perror("erreur shmat : Ligne 106");
         exit(-1);
     }
      
@@ -131,12 +135,12 @@ int main(int argc, char* argv[]){
     
 
     for (i=0; i<m.nb_caissiers;i++){
-        m.tab_caissiers[i] = fork();
+        m.tab_caissiers[i].pid = fork();
             
-        if( m.tab_caissiers[i] < -1){
+        if( m.tab_caissiers[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
-        }else if( m.tab_caissiers[i] == 0 ){
+        }else if( m.tab_caissiers[i].pid == 0 ){
             printf("Caissier créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
@@ -154,12 +158,12 @@ int main(int argc, char* argv[]){
 
     for (i=0; i<m.nb_clients;i++){
 
-        m.tab_clients[i] = fork();
+        m.tab_clients[i].pid = fork();
             
-        if( m.tab_clients[i] < -1){
+        if( m.tab_clients[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
-        }else if( m.tab_clients[i] == 0 ){
+        }else if( m.tab_clients[i].pid == 0 ){
             printf("Client créé : %d \n", getpid());
 
             sprintf(num_creation, "%d", i);
@@ -176,7 +180,7 @@ int main(int argc, char* argv[]){
     }
 
     for (j=0; j<m.nb_clients;j++){
-        kill(m.tab_clients[j], SIGUSR1);
+        kill(m.tab_clients[j].pid, SIGUSR1);
     }
 
 
@@ -185,7 +189,7 @@ int main(int argc, char* argv[]){
     attente = 0;
     while (attente < m.nb_clients){ 
 
-        if ((waitpid(m.tab_clients[attente],NULL,0) == -1) && (errno == ECHILD)){
+        if ((waitpid(m.tab_clients[attente].pid,NULL,0) == -1) && (errno == ECHILD)){
             attente ++;
         }else{
             //fprintf(stderr,".");
@@ -215,7 +219,7 @@ int main(int argc, char* argv[]){
         kill(m.tab_vendeurs[j].pid, SIGUSR1);
     }
     for (j=0; j<m.nb_caissiers;j++){
-        kill(m.tab_caissiers[j], SIGUSR1);
+        kill(m.tab_caissiers[j].pid, SIGUSR1);
     }
 
     fonc_dest(shm_ptr,shmid,msgid); 

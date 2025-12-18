@@ -45,13 +45,9 @@ int main(int argc, char* argv[]){
 
     srand(time(NULL));
 
-<<<<<<< HEAD
     int num_rayon = rand() % NB_RAYON; // Entre 0 et 9 
 
     int num_vendeur = rand() % (m.nb_vendeurs + 1) + 1; //Ou on peut aussi récuperer le vendeur le moins occupé 
-=======
-    int num_rayon = rand() % NB_RAYON + 1;
->>>>>>> 61270ba9799a49cf57716bba7aded80f5977f564
 
 
     if (sigaction(SIGUSR1, &sa, NULL) < 0) {
