@@ -1,10 +1,10 @@
 #include "librairies.h"
 
-int sigusr1recu = 0; 
+int sigusr2recu = 0; 
 
 void arret(int sig){
-    printf("signal %d (TERM) reçu \n", sig); 
-    sigusr1recu++;
+    printf("signal %d (TERM) reçu (clients) \n", sig); 
+    sigusr2recu++;
 }
 
 void usage(char * appel){
@@ -50,14 +50,14 @@ int main(int argc, char* argv[]){
     int num_vendeur = rand() % (m.nb_vendeurs + 1) + 1; //Ou on peut aussi récuperer le vendeur le moins occupé 
 
 
-    if (sigaction(SIGUSR1, &sa, NULL) < 0) {
+    if (sigaction(SIGUSR2, &sa, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
     }
 
-    while (!sigusr1recu && stop){
+    while (!sigusr2recu && stop){
 
-
+        fprintf(stderr,"Le client %d veut acheter au rayon %d au près du vendeur %d \n",getpid(),num_rayon,num_vendeur);
 
         // Il prend le vendeur désigné et lui fait savoir son rayon
         msg->mtype = num_vendeur;   // vendeur ciblé
@@ -80,11 +80,11 @@ int main(int argc, char* argv[]){
 
         if (msg->vendeur_reco != num_vendeur){
             num_vendeur = msg->vendeur_reco;
-
+            fprintf(stderr,"Le client %d change de vendeur, il va vers : %d \n",getpid(),num_vendeur);
             // Fin pour ce tour, le vendeur n'est pas le bon.
         }else{
 
-
+            fprintf(stderr,"Le client %d a trouvé le bon vendeur : %d \n",getpid(),num_vendeur);
             // Le vendeur passe un certain temps avant de repondre puis redeclenche la procédure
             reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
         
@@ -110,6 +110,7 @@ int main(int argc, char* argv[]){
                 stop = 1;
             }else{
                 // S'occuper avec le caissier
+                fprintf(stderr,"Le client %d va à la caisse.\n",getpid());
             }
 
         }

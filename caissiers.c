@@ -1,5 +1,12 @@
 #include "librairies.h"
 
+int sigusr2recu = 0; 
+
+void arret(int sig){
+    printf("signal %d (TERM) reçu (Caissiers) \n", getpid()); 
+    sigusr2recu++;
+}
+
 void usage(char * appel){
     fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num caissier> <clef file de message> \n", appel);
     exit(EXIT_FAILURE);
@@ -17,6 +24,11 @@ int main(int argc, char* argv[]){
 
     key_t key = (key_t)atoi(argv[5]);
     
+    struct sigaction sa;
+
+    sa.sa_handler = arret;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
 
     /* Recup de la file de messages */
     int msgid = msgget(key, 0666 | IPC_CREAT);
@@ -25,8 +37,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
     
-
-    if (sigaction(SIGUSR1, &action, NULL) < 0) {
+    if (sigaction(SIGUSR2, &sa, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
     }

@@ -3,8 +3,15 @@
 int sigtermrecu = 0; 
 
 void arret(int sig){
-    printf("signal %d (TERM) reçu \n", sig); 
+    printf("signal %d (TERM) reçu (Initial) \n", sig); 
     sigtermrecu++;
+}
+
+int sigusr1recu = 0; 
+
+void debut(int sig){
+    printf("Le signal %d commence (dans Initial.c) \n", sig); 
+    sigusr1recu++;
 }
 
 void usage(char * appel){
@@ -44,6 +51,12 @@ int main(int argc, char* argv[]){
     sa.sa_handler = arret;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
+
+    struct sigaction sa2;
+
+    sa2.sa_handler = debut;
+    sigemptyset(&sa2.sa_mask);
+    sa2.sa_flags = 0;
 
 
     // Initialisation des rayons inoccupés pour s'assurer qu'ils sont tous occupés
@@ -113,7 +126,7 @@ int main(int argc, char* argv[]){
     for (i=0; i<m.nb_vendeurs;i++){
 
         m.tab_vendeurs[i].pid = fork();
-            
+
         if( m.tab_vendeurs[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");
             exit(EXIT_FAILURE);
@@ -123,6 +136,14 @@ int main(int argc, char* argv[]){
             sprintf(num_creation, "%d", i+1);
 
             char * args[] = {"./vendeurs", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
+
+            if (sigaction(SIGUSR1, &sa2, NULL) < 0) {
+                perror("Erreur sigaction");
+                exit(1);
+            }
+            while (!sigusr1recu){
+                pause();
+            }
 
             if( execv("./vendeurs", args) == -1 ) {
                 perror("execv vendeurs failed");
@@ -136,7 +157,7 @@ int main(int argc, char* argv[]){
 
     for (i=0; i<m.nb_caissiers;i++){
         m.tab_caissiers[i].pid = fork();
-            
+
         if( m.tab_caissiers[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
@@ -146,6 +167,14 @@ int main(int argc, char* argv[]){
             sprintf(num_creation, "%d", i);
 
             char * args[] = {"./caissiers", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
+
+            if (sigaction(SIGUSR1, &sa2, NULL) < 0) {
+                perror("Erreur sigaction");
+                exit(1);
+            }
+            while (!sigusr1recu){
+                pause();
+            }
 
             if( execv("./caissiers", args) == -1 ) {
                 perror("execv caissiers failed");
@@ -159,7 +188,7 @@ int main(int argc, char* argv[]){
     for (i=0; i<m.nb_clients;i++){
 
         m.tab_clients[i].pid = fork();
-            
+
         if( m.tab_clients[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
@@ -170,6 +199,13 @@ int main(int argc, char* argv[]){
             
             char * args[] = {"./clients", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
 
+            if (sigaction(SIGUSR1, &sa2, NULL) < 0) {
+                perror("Erreur sigaction");
+                exit(1);
+            }
+            while (!sigusr1recu){
+                pause();
+            }
             if( execv("./clients", args) == -1 ) {
                 perror("execv clients failed");
                 exit(EXIT_FAILURE);
@@ -179,13 +215,20 @@ int main(int argc, char* argv[]){
         }
     }
 
+    // Debuter tous
     for (j=0; j<m.nb_clients;j++){
         kill(m.tab_clients[j].pid, SIGUSR1);
+    }
+    for (j=0; j<m.nb_vendeurs;j++){
+        kill(m.tab_vendeurs[j].pid, SIGUSR1);
+    }
+    for (j=0; j<m.nb_caissiers;j++){
+        kill(m.tab_caissiers[j].pid, SIGUSR1);
     }
 
 
     /* On attend la terrminaison : */
-    fprintf(stderr,"Attente (robuste) de leur terminaison");
+    fprintf(stderr,"Attente (robuste) de leur terminaison \n");
     attente = 0;
     while (attente < m.nb_clients){ 
 
@@ -199,7 +242,7 @@ int main(int argc, char* argv[]){
 
 
 
-    fprintf(stderr," Attente du kill de %d pour terminer \n", getpid());
+    fprintf(stderr," Attente de la commande : kill %d \npour terminer \n", getpid());
     if (sigaction(SIGTERM, &sa, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
@@ -214,12 +257,14 @@ int main(int argc, char* argv[]){
     // Avertir vendeurs et caissiers qu'ils peuvent terminer proprement
 
     // Détruire les IPCs
-
+    for (j=0; j<m.nb_clients;j++){
+        kill(m.tab_clients[j].pid, SIGUSR2);
+    }
     for (j=0; j<m.nb_vendeurs;j++){
-        kill(m.tab_vendeurs[j].pid, SIGUSR1);
+        kill(m.tab_vendeurs[j].pid, SIGUSR2);
     }
     for (j=0; j<m.nb_caissiers;j++){
-        kill(m.tab_caissiers[j].pid, SIGUSR1);
+        kill(m.tab_caissiers[j].pid, SIGUSR2);
     }
 
     fonc_dest(shm_ptr,shmid,msgid); 

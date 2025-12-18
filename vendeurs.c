@@ -1,10 +1,10 @@
 #include "librairies.h"
 
-int sigusr1recu = 0; 
+int sigusr2recu = 0; 
 
 void arret(int sig){
-    printf("signal %d (TERM) reçu \n", sig); 
-    sigusr1recu++;
+    printf("signal %d (TERM) reçu (vendeurs) \n", sig); 
+    sigusr2recu++;
 }
 
 void usage(char * appel){
@@ -57,12 +57,12 @@ int main(int argc, char* argv[]){
     }
 
 
-    if (sigaction(SIGUSR1, &sa, NULL) < 0) {
+    if (sigaction(SIGUSR2, &sa, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
     }
 
-    while (!sigusr1recu){
+    while (!sigusr2recu){
         reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
         
         if (reception == -1){
