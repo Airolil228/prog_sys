@@ -3,7 +3,7 @@
 int sigusr2recu = 0; 
 
 void arret(int sig){
-    printf("signal %d (TERM) reçu (clients) \n", sig); 
+    fprintf(stderr,"signal %d (TERM) reçu (clients) \n", sig); 
     sigusr2recu++;
 }
 
@@ -16,6 +16,8 @@ int main(int argc, char* argv[]){
     if (argc != 6){
         usage(argv[0]);
     }
+    fflush(stderr);
+    fprintf(stderr,"TEST TEST TEST TEST TEST");
     int num_client = atoi(argv[4]);
     magasin m;
     m.nb_vendeurs = atoi(argv[1]);

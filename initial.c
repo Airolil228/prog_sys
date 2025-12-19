@@ -3,14 +3,14 @@
 int sigtermrecu = 0; 
 
 void arret(int sig){
-    printf("signal %d (TERM) reçu (Initial) \n", sig); 
+    fprintf(stderr,"signal %d (TERM) reçu (Initial) \n", sig); 
     sigtermrecu++;
 }
 
 int sigusr1recu = 0; 
 
 void debut(int sig){
-    printf("Le signal %d commence (dans Initial.c) \n", sig); 
+    fprintf(stderr,"Le signal %d commence (dans Initial.c) \n", sig); 
     sigusr1recu++;
 }
 
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]){
     }
 
     //Creation de seg.mémoire.partagé
-    printf("sizeof(magasin) = %lu\n", sizeof(magasin));
+    fprintf(stderr,"sizeof(magasin) = %lu\n", sizeof(magasin));
     shmid = shmget(key,sizeof(magasin),IPC_CREAT | 0666);
 
     if (shmid == -1){
@@ -196,7 +196,7 @@ int main(int argc, char* argv[]){
             fprintf(stderr,"Erreur de création de processus \n");
             exit(EXIT_FAILURE);
         }else if( shm_ptr->tab_vendeurs[i].pid == 0 ){
-            printf("Vendeur créé : %d \n", getpid());
+            fprintf(stderr,"Vendeur créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
 
@@ -230,7 +230,7 @@ int main(int argc, char* argv[]){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
         }else if( shm_ptr->tab_caissiers[i].pid == 0 ){
-            printf("Caissier créé : %d \n", getpid());
+            fprintf(stderr,"Caissier créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
 
@@ -264,7 +264,7 @@ int main(int argc, char* argv[]){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
         }else if( shm_ptr->tab_clients[i].pid == 0 ){
-            printf("Client créé : %d \n", getpid());
+            fprintf(stderr,"Client créé : %d \n", getpid());
 
             sprintf(num_creation, "%d", i);
             
@@ -276,10 +276,10 @@ int main(int argc, char* argv[]){
             }
 
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
-
             while (!sigusr1recu){
                 pause();
             }
+            fprintf(stderr,"TEST TEST TEST TEST TEST\n");
             if( execv("./clients", args) == -1 ) {
                 perror("execv clients failed");
                 exit(EXIT_FAILURE);
