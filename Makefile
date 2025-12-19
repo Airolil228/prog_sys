@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -O2
 
-TARGET = initial vendeurs caissiers clients
+TARGET = initial vendeurs caissiers clients monitoring
 
 make: $(TARGET)
 
@@ -16,6 +16,9 @@ caissiers : caissiers.c
 
 clients : clients.c
 	$(CC) $(CFLAGS) clients.c -o clients
+
+monitoring: monitoring.c
+	$(CC) $(CFLAGS) monitoring.c -o monitoring
 
 clean:
 	rm -fr *.o $(TARGET) 
