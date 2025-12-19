@@ -15,13 +15,12 @@ void arret(int sig){
 }
 
 void usage(char * appel){
-    fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num caissier> <clef file de message> \n", appel);
+    fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num caissier> <clef file de message> <fic_log>\n", appel);
     exit(EXIT_FAILURE);
 }
 
-
 int main(int argc, char* argv[]){
-    if (argc != 6){
+    if (argc != 7){
         usage(argv[0]);
     }
     fflush(stderr);
@@ -31,7 +30,10 @@ int main(int argc, char* argv[]){
     m.nb_caissiers = atoi(argv[2]);
     m.nb_clients = atoi(argv[3])+1;
 
-    key_t key = (key_t)atoi(argv[5]);
+    key_t key = (key_t) atoi(argv[5]);
+    
+    int fic_log = atoi(argv[6]); 
+
     struct message msg;
     ssize_t reception;
     int temps; //variable aleatoire
@@ -64,7 +66,12 @@ int main(int argc, char* argv[]){
     srand(time(NULL));
 
     //recupère le sémaphore
-    //int sem_id = semget(key,5,0666);
+    /*int sem_id = semget(key,5,0666);
+
+    if(sem_id < -1){
+        perror("Erreur shmget (43)");
+        exit(EXIT_FAILURE);
+    }*/
 
     /* Récupération du segment de mémoire partagée */
     int shmid = shmget(key, sizeof(magasin), 0666);
@@ -75,7 +82,7 @@ int main(int argc, char* argv[]){
 
     /* Attachement du segment au processus */
     magasin *shm_ptr = shmat(shmid, NULL, 0);
-    if (shm_ptr == (magasin*)-1){
+    if (shm_ptr == (magasin*) -1){
         perror("Erreur shmat (vendeur)");
         return 1;
     }
@@ -95,11 +102,13 @@ int main(int argc, char* argv[]){
     while (!sigusr2recu){
         //Attendre un client
         fprintf(stderr, "Caissier %d attend un client...\n",num_caissier);
+        dprintf(fic_log, "Caissier %d attend un client...\n",num_caissier);
         
         reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CAISSIER_DISCUSSION_BASE - 1, 0);
 
         if(reception == -1 && errno != EINTR){
-            perror("Erreur msgrcv (cassier)");
+            perror("Erreur msgrcv (caissier)");
+            exit(EXIT_FAILURE);
         }
 
         //Mettre à jour l'état 
@@ -112,13 +121,14 @@ int main(int argc, char* argv[]){
         //Récuperer le montant 
         montant = msg.montant; 
         fprintf(stdout,"Caissier %d: Client %d doit payer %d...\n",num_caissier,msg.client_id,montant);
+        dprintf(fic_log,"Caissier %d: Client %d doit payer %d...\n",num_caissier,msg.client_id,montant);
 
         //Communiquer le prix au client 
         msg.mtype = CLIENT_DISCUSSION_BASE + msg.client_id;
         envoi = msgsnd(msgid,&msg,sizeof(struct message) - sizeof(long),0);
 
         if(envoi == -1){
-            perror("Erreur msgsnd (cassier -> cleint)");
+            perror("Erreur msgsnd (caissier -> cleint)");
             exit(EXIT_FAILURE);
         }
 
@@ -137,6 +147,10 @@ int main(int argc, char* argv[]){
 
         //Cassier terminé: Remettre à LIBRE
         fprintf(stdout,"Caissier %d a terminé avec le client %d\n", 
+                num_caissier, 
+                msg.client_id
+        );
+        dprintf(fic_log,"Caissier %d a terminé avec le client %d\n", 
                 num_caissier, 
                 msg.client_id
         );

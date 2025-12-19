@@ -15,12 +15,12 @@ void arret(int sig){
 }
 
 void usage(char * appel){
-    fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num client> <clef file de message> \n", appel);
+    fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num client> <clef file de message> <fic_log> \n", appel);
     exit(EXIT_FAILURE);
 }
 
 int main(int argc, char* argv[]){
-    if (argc != 6){
+    if (argc != 7){
         usage(argv[0]);
     }
     fflush(stderr);
@@ -31,7 +31,9 @@ int main(int argc, char* argv[]){
     m.nb_caissiers = atoi(argv[2]);
     m.nb_clients = atoi(argv[3])+1;
 
-    key_t key = (key_t)atoi(argv[5]);
+    key_t key = (key_t) atoi(argv[5]);
+
+    int fic_log = atoi(argv[6]);
 
     struct message msg;
     ssize_t reception;
@@ -89,6 +91,7 @@ int main(int argc, char* argv[]){
         msg.type_message = 0; 
 
         fprintf(stderr,"Ligne %d :Le client %d veut acheter au rayon %d au près du vendeur %d \n", __LINE__,num_client,num_rayon,num_vendeur);
+        dprintf(fic_log,"Ligne %d :Le client %d veut acheter au rayon %d au près du vendeur %d \n", __LINE__,num_client,num_rayon,num_vendeur);
 
         // Il prend le vendeur désigné et lui fait savoir son rayon
         msg.mtype = VENDEUR_BASE + num_vendeur;   // vendeur ciblé
@@ -116,11 +119,13 @@ int main(int argc, char* argv[]){
         if (msg.vendeur_reco != num_vendeur){
             num_vendeur = msg.vendeur_reco;
             fprintf(stderr,"Ligne 90 : Le client %d change de vendeur, il va vers : %d \n",num_client,num_vendeur);
+            dprintf(fic_log,"Ligne 90 : Le client %d change de vendeur, il va vers : %d \n",num_client,num_vendeur);
             // Fin pour ce tour, le vendeur n'est pas le bon.
             continue;
         }else{
 
             fprintf(stderr,"Ligne 94 : Le client %d a trouvé le bon vendeur : %d \n",num_client,num_vendeur);
+            dprintf(fic_log,"Ligne 94 : Le client %d a trouvé le bon vendeur : %d \n",num_client,num_vendeur);
             // Le vendeur passe un certain temps avant de repondre puis redeclenche la procédure
             /*reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_DISCUSSION_BASE + num_client, 0);
         
@@ -147,10 +152,12 @@ int main(int argc, char* argv[]){
 
             if (msg.decision == 0){
                 fprintf(stderr,"Ligne 118 : Le client %d refuse l'achat, et pars\n",num_client);
+                dprintf(fic_log,"Ligne 118 : Le client %d refuse l'achat, et pars\n",num_client);
                 break; // abandon
             }else{
                 // S'occuper avec le caissier
                 fprintf(stderr,"Ligne 122 : Le client %d va à la caisse.\n",num_client);
+                dprintf(fic_log,"Ligne 122 : Le client %d va à la caisse.\n",num_client);
 
                 //break; // va a la caisse
 
@@ -161,6 +168,7 @@ int main(int argc, char* argv[]){
 
                 if (envoi == -1){
                     fprintf(stderr,"Erreur msgsnd (coté client), Ligne %d (Envoie du num de client au caissier) \n", __LINE__);
+                    dprintf(fic_log,"Erreur msgsnd (coté client), Ligne %d (Envoie du num de client au caissier) \n", __LINE__);
                     perror("msgsnd");
                     exit(EXIT_FAILURE);
                 }
@@ -170,6 +178,7 @@ int main(int argc, char* argv[]){
                 
                 if (reception == -1){
                     fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Premiere reponse caissier : prix) \n");
+                    dprintf(fic_log,"Erreur msgrcv (coté client), Ligne 79 (Premiere reponse caissier : prix) \n");
                     perror("msgrcv");
                     exit(EXIT_FAILURE);
                 }
@@ -180,11 +189,13 @@ int main(int argc, char* argv[]){
                 
                 if (reception == -1){
                     fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Le caissier conclu l'achat) \n");
+                    dprintf(fic_log,"Erreur msgrcv (coté client), Ligne 79 (Le caissier conclu l'achat) \n");
                     perror("msgrcv");
                     exit(EXIT_FAILURE);
                 }
 
                 fprintf(stderr,"Le client %d fini, il a acheté %d dihram au rayon %d.\n",num_client,msg.montant,num_rayon);
+                dprintf(fic_log,"Le client %d fini, il a acheté %d dihram au rayon %d.\n",num_client,msg.montant,num_rayon);
 
             }
 
@@ -192,6 +203,7 @@ int main(int argc, char* argv[]){
     }
 
     fprintf(stderr, "Fin du client %d \n",getpid());
-
+    dprintf(fic_log, "Fin du client %d \n",getpid());
+    close(fic_log);
     exit(EXIT_SUCCESS);
 }

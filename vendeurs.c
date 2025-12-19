@@ -23,7 +23,7 @@ void usage(char * appel){
 
 
 int main(int argc, char* argv[]){
-    if (argc != 6){
+    if (argc != 7){
         usage(argv[0]);
     }
     fflush(stderr);
@@ -32,8 +32,10 @@ int main(int argc, char* argv[]){
     m.nb_vendeurs = atoi(argv[1]);
     m.nb_caissiers = atoi(argv[2]);
     m.nb_clients = atoi(argv[3])+1;
-
     key_t key = (key_t) atoi(argv[5]);
+    
+    int fic_log = atoi(argv[6]);
+
     struct message msg;
     ssize_t reception;
     int envoi;
@@ -73,6 +75,8 @@ int main(int argc, char* argv[]){
         perror("Erreur shmget (vendeur)");
         return 1;
     }
+
+
 
     /* Attachement du segment au processus */
     magasin *shm_ptr = shmat(shmid, NULL, 0);
@@ -119,6 +123,7 @@ int main(int argc, char* argv[]){
     while (!sigusr2recu){
 
         fprintf(stderr,"Ligne %d : Le vendeur %d attend une requete d'un client \n", __LINE__,num_vendeur);
+        dprintf(fic_log,"Ligne %d : Le vendeur %d attend une requete d'un client \n", __LINE__,num_vendeur);
         reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), VENDEUR_BASE + num_vendeur, 0);
         
         if (reception == -1){
@@ -129,6 +134,7 @@ int main(int argc, char* argv[]){
 
         // Traitement du message
         fprintf(stderr,"Ligne %d : Le vendeur %d recoit une requete du client %d \n", __LINE__,num_vendeur, msg.client_id);
+        dprintf(fic_log,"Ligne %d : Le vendeur %d recoit une requete du client %d \n", __LINE__,num_vendeur, msg.client_id);
         shm_ptr->tab_vendeurs[num_vendeur].nb_clients_attente++;
 
         if (shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise != msg.rayon){

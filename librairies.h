@@ -15,6 +15,8 @@
 #include <sys/sem.h>
 #include <sys/msg.h>
 #include <time.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 #define MAX_VENDEUR_CAISSIER_CLIENT 100
 
@@ -34,6 +36,8 @@
 #define VENDEUR_DISCUSSION_BASE 3000
 
 #define CAISSIER_DISCUSSION_BASE 4000
+
+#define CAISSIER_BASE 5000 // tranche des caissiers
 
 #define SEM_VENDEURS   0    // Protège tab_vendeurs
 #define SEM_CAISSIERS  1    // Protège tab_caissiers
@@ -121,7 +125,7 @@ void P(int sem_id, int sem_num) {
 void V(int sem_id, int sem_num) {
     struct sembuf operation;
     operation.sem_num = sem_num;
-    operation.sem_op = 1;  // Incrémente
+    operation.sem_op = 1;   // Incrémente
     operation.sem_flg = 0;  // Bloquant
     
     if (semop(sem_id, &operation, 1) == -1) {

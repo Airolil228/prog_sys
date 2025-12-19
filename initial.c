@@ -55,12 +55,30 @@ void init_struct(magasin* shm_ptr,int nbVend,int nbCaisse){
     }
 }
 
+void init_semaph(int sem_id){
+    int i; 
+    for(i = 0; i < 5 ; i++){
+        if( semctl(sem_id,i,SETVAL,1) == -1){
+            perror("Erreur semctl SETVAL");
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
 int main(int argc, char* argv[]){
     if (argc != 4){
         usage(argv[0]);
     }
     int i,j; //int attente;
-   
+    int fic_log;
+
+    if( ( fic_log = open("log.txt", O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, 0666)) == -1 ){
+        fprintf(stdout,"Erreur lors de l'ouverture du fichier\n");
+        exit(EXIT_FAILURE); 
+    }
+
+    fcntl(fic_log, F_SETFD, 0);// empêche la fermeture automatique
+
     int nb_vendeurs = atoi(argv[1]);
     int nb_caissiers = atoi(argv[2]);
     int nb_clients = atoi(argv[3]);
@@ -69,7 +87,10 @@ int main(int argc, char* argv[]){
     char str_nb_vendeurs[NB_CHAR_EXEC];
     char str_nb_caissiers[NB_CHAR_EXEC];
     char str_nb_clients[NB_CHAR_EXEC];
+    char str_fic_log[NB_CHAR_EXEC]; 
+
     key_t key; char str_key[NB_CHAR_EXEC];
+
     magasin *shm_ptr;//L'espace mémoire de procecessus 
     int msgid;
     int shmid; // seg.mem.part CLIENT <=> VENDEUR et CLIENT <=> CASIER
@@ -101,36 +122,41 @@ int main(int argc, char* argv[]){
     sigaddset(&mask, SIGUSR1);
     sigprocmask(SIG_BLOCK, &mask, NULL);
 
-
     // Initialisation des rayons inoccupés pour s'assurer qu'ils sont tous occupés
-
     sprintf(str_nb_vendeurs,  "%d", nb_vendeurs);  // Conversion des entiers en chaînes de caractères
     sprintf(str_nb_caissiers, "%d", nb_caissiers);
-    sprintf(str_nb_clients, "%d", nb_clients);
+    sprintf(str_nb_clients,   "%d", nb_clients );
+    sprintf(str_fic_log,      "%d", fic_log); 
 
     // Créer processus vendeur, caissier et clients
 
     if(nb_vendeurs < NB_RAYON){
         fprintf(stderr,"nombre_vendeurs > nombre de rayon : %d \n",NB_RAYON);
+        dprintf(stderr,"nombre_vendeurs > nombre de rayon : %d \n",NB_RAYON);
+        
         usage(argv[0]);
     }
 
     if(nb_caissiers < 1){
-        fprintf(stderr,"usage : nombre_caissiers >= 1 \n"); 
+        fprintf(stderr,"usage : nombre_caissiers > 1 \n"); 
+        dprintf(fic_log,"usage : nombre_caissiers > 1 \n"); 
+        
         usage(argv[0]);
     }
 
     if(nb_clients < 2){
         fprintf(stderr,"usage : nombre_clients > 1 \n"); 
+        dprintf(fic_log,"usage : nombre_clients > 1 \n"); 
+        
         usage(argv[0]);
     }
 
     // Initialisation de la file de message 
-
     /* Génération d'une clé unique */
     key = ftok(".",'M');
     if (key == -1){
         perror("Erreur ftok : Ligne 81");
+        dprintf(fic_log,"Erreur ftok : Ligne 81");
         return 1;
     }
 
@@ -140,6 +166,8 @@ int main(int argc, char* argv[]){
     msgid = msgget(key, 0666 | IPC_CREAT);
     if (msgid == -1){
         perror("Erreur msgget : Ligne 90");
+        dprintf(fic_log,"Erreur msgget : Ligne 90");
+
         return 1;
     }
 
@@ -149,6 +177,8 @@ int main(int argc, char* argv[]){
 
     if (shmid == -1){
         perror("erreur shmget : Ligne 98 ");
+        dprintf(fic_log,"erreur shmget : Ligne 98");
+        
         exit(EXIT_FAILURE);
     }
 
@@ -157,6 +187,7 @@ int main(int argc, char* argv[]){
 
     if (shm_ptr == (magasin*)-1){
         perror("erreur shmat : Ligne 106");
+        dprintf(fic_log,"erreur shmat : Ligne 106");
         exit(-1);
     }
 
@@ -167,29 +198,32 @@ int main(int argc, char* argv[]){
     shm_ptr->nb_clients = atoi(argv[3]);
     shm_ptr->SimulationActive = 1;
     
-    //Creation l'ensemble de semaphore
+    //Creation l'ensemble de semaphore (il y en a 5)
     int sem_id = semget(key, 5, IPC_CREAT | 0666);
-    if(sem_id < -1){
+    if(sem_id == -1){
         perror("erreur semget 136"); 
+        dprintf(fic_log,"erreur semget 136"); 
         exit(EXIT_FAILURE);
     }
+
+    init_semaph(sem_id);
 
     //============================================== UTILISATION =================================== // 
     init_struct(shm_ptr,nb_vendeurs,nb_caissiers);
 
     for (i=0; i<shm_ptr->nb_vendeurs;i++){
-
         l.tab_vendeurs[i] = fork();
 
-        if( l.tab_vendeurs[i] < -1){
+        if( l.tab_vendeurs[i] == -1){
             fprintf(stderr,"Erreur de création de processus \n");
             exit(EXIT_FAILURE);
         }else if( l.tab_vendeurs[i] == 0 ){
-            fprintf(stderr,"Vendeur créé : %d \n", getpid());
+            printf("Vendeur créé : %d \n", getpid());
+            dprintf(fic_log,"Vendeur créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
 
-            char * args[] = {"./vendeurs", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
+            char * args[] = {"./vendeurs", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key,str_fic_log,NULL}; // Préparation des arguments pour execv
 
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
@@ -212,10 +246,11 @@ int main(int argc, char* argv[]){
             exit(EXIT_FAILURE);
         }else if( l.tab_caissiers[i] == 0 ){
             fprintf(stderr,"Caissier créé : %d \n", getpid());
+            dprintf(fic_log,"Caissier créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
 
-            char * args[] = {"./caissiers", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
+            char * args[] = {"./caissiers", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key,str_fic_log,NULL}; // Préparation des arguments pour execv
 
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
@@ -234,13 +269,16 @@ int main(int argc, char* argv[]){
 
         if( l.tab_clients[i] == -1){
             fprintf(stderr,"Erreur de création de processus \n");  
+            dprintf(fic_log,"Erreur de création de processus \n");  
+            
             exit(EXIT_FAILURE);
         }else if( l.tab_clients[i] == 0 ){
             fprintf(stderr,"Client créé : %d \n", getpid());
+            dprintf(fic_log,"Client créé : %d \n", getpid());
 
             sprintf(num_creation, "%d", i);
             
-            char * args[] = {"./clients", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
+            char * args[] = {"./clients", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key,str_fic_log, NULL}; // Préparation des arguments pour execv
 
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
@@ -277,6 +315,7 @@ int main(int argc, char* argv[]){
 
     /* On attend la terrminaison : */
     fprintf(stderr,"Attente (robuste) de leur terminaison \n");
+    dprintf(fic_log,"Attente (robuste) de leur terminaison \n");
     for (i = 0; i < shm_ptr->nb_clients; i++) {
         waitpid(l.tab_clients[i], NULL, 0);
     }
@@ -293,9 +332,6 @@ int main(int argc, char* argv[]){
         pause();
     }
 
-
-
-
     // Avertir vendeurs et caissiers qu'ils peuvent terminer proprement
 
     // Détruire les IPCs
@@ -310,6 +346,7 @@ int main(int argc, char* argv[]){
     }
 
     fonc_dest(shm_ptr,shmid,msgid,sem_id); 
+    close(fic_log);
     exit(EXIT_SUCCESS);
 }
 
