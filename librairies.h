@@ -27,11 +27,16 @@
 #define PROBA_ACHAT 60
 #define TAILLE 1026
 
-#define VENDEUR_BASE 1000
+#define VENDEUR_BASE 1000 // tranche des vendeurs
 
 #define CLIENT_DISCUSSION_BASE 2000
 
 #define VENDEUR_DISCUSSION_BASE 3000
+
+#define SEM_VENDEURS   0    // Protège tab_vendeurs
+#define SEM_CAISSIERS  1    // Protège tab_caissiers
+#define SEM_CLIENTS    2    // Protège tab_clients
+#define SEM_RAYONS     3    // Protège tab_rayon
 
 
 typedef enum{
@@ -82,7 +87,7 @@ typedef struct { //
 }magasin;
 
 struct message {
-    long mtype ;
+    long mtype ;       // type de message
     int client_id;
     int rayon;
     int vendeur_reco;    // vendeur recommandé si pas bon rayon
@@ -94,3 +99,29 @@ struct message {
 };
 
 struct sigaction action;
+
+// bloquer le sémaphore
+void P(int sem_id, int sem_num) {
+    struct sembuf operation;
+    operation.sem_num = sem_num;
+    operation.sem_op = -1;  // Décrémente
+    operation.sem_flg = 0;  // Bloquant
+    
+    if (semop(sem_id, &operation, 1) == -1) {
+        perror("Erreur semop P");
+        exit(EXIT_FAILURE);
+    }
+}
+
+// libérer le sémaphore
+void V(int sem_id, int sem_num) {
+    struct sembuf operation;
+    operation.sem_num = sem_num;
+    operation.sem_op = 1;  // Incrémente
+    operation.sem_flg = 0;  // Bloquant
+    
+    if (semop(sem_id, &operation, 1) == -1) {
+        perror("Erreur semop V");
+        exit(EXIT_FAILURE);
+    }
+}

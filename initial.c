@@ -289,7 +289,7 @@ int main(int argc, char* argv[]){
 
 
 
-    fprintf(stderr," Attente de la commande : kill %d \npour terminer \n", getpid());
+    fprintf(stderr," Attente de la commande : kill %d \npour terminer \n\n", getpid());
     if (sigaction(SIGTERM, &sa, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
