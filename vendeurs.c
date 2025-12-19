@@ -17,13 +17,12 @@ int main(int argc, char* argv[]){
         usage(argv[0]);
     }
     int num_vendeur = atoi(argv[4]);
-    int rayon_competence;
     magasin m;
     m.nb_vendeurs = atoi(argv[1]);
     m.nb_caissiers = atoi(argv[2]);
     m.nb_clients = atoi(argv[3])+1;
 
-    key_t key = (key_t)atoi(argv[5]);
+    key_t key = (key_t) atoi(argv[5]);
     struct message msg;
     ssize_t reception;
     int envoi;
@@ -40,6 +39,19 @@ int main(int argc, char* argv[]){
 
     //fprintf(stderr,"Debut vendeur.c : <nombre vendeurs : %d > <nombre caissiers : %d > <nombre clients : %d > <num vendeur : %d > <clef file de message : %d > \n",atoi(argv[1]),atoi(argv[2]),atoi(argv[3]),atoi(argv[4]),atoi(argv[5]));
     
+    /* Récupération du segment de mémoire partagée */
+    int shmid = shmget(key, sizeof(magasin), 0666);
+    if (shmid == -1){
+        perror("Erreur shmget (vendeur)");
+        return 1;
+    }
+
+    /* Attachement du segment au processus */
+    magasin *shm_ptr = shmat(shmid, NULL, 0);
+    if (shm_ptr == (magasin*)-1){
+        perror("Erreur shmat (vendeur)");
+        return 1;
+    }
 
     /* Recup de la file de messages */
     int msgid = msgget(key, 0666 | IPC_CREAT);
@@ -49,11 +61,11 @@ int main(int argc, char* argv[]){
     }
 
     if (nb_rayon_inoccupe > 0){
-        rayon_competence = tab_rayon_inoccupe[rand() % nb_rayon_inoccupe];
-        nb_rayon_inoccupe --;
+        shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise = tab_rayon_inoccupe[rand() % nb_rayon_inoccupe];
+        nb_rayon_inoccupe--;
     }else{
         if (nb_rayon_inoccupe == 0){
-            rayon_competence = rand() % NB_RAYON;  // 0 à NB_RAYON - 1
+            shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise = rand() % NB_RAYON;  // 0 à NB_RAYON - 1
         }
     }
 
@@ -75,7 +87,9 @@ int main(int argc, char* argv[]){
 
         // Traitement du message
         fprintf(stderr,"Le vendeur %d recoit une requete d'un client \n",num_vendeur);
-        if (rayon_competence != msg.rayon){
+        shm_ptr->tab_vendeurs[num_vendeur].nb_clients_attente++;
+
+        if (shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise != msg.rayon){
             // Répondre pas mon rayon + id d'un autre vendeur
 
             msg.mtype = CLIENT_BASE + msg.client_id; // Reponse vers le client
@@ -91,10 +105,16 @@ int main(int argc, char* argv[]){
                 perror("Erreur msgsnd (coté vendeur), Ligne 87 (envoi du vendeur recommandé)");
             }
             fprintf(stderr,"Le vendeur %d a redirigé le client %d vers le vendeur %d\n",num_vendeur, msg.client_id, vendeur_recommande);
+            shm_ptr->tab_vendeurs[num_vendeur].etat = LIBRE;
             // Retour à l'attente d'un autre client -> Fin du tour
         }else{
             // tire un temps aléatoire
             temps = rand() % 5 + 1; // Temps de 1 à 5 sec
+            
+            // Le vendeur prend en charge le client
+            shm_ptr->tab_vendeurs[num_vendeur].etat = OCCUPE;
+            shm_ptr->tab_vendeurs[num_vendeur].client_actuel = msg.client_id;
+
             sleep(temps);
 
             // reveil le client (message)
@@ -118,8 +138,10 @@ int main(int argc, char* argv[]){
             }
 
             if (msg.decision == 0){
-                // Si vente refusée -> fin
+                // Si vente refusée -> fin::
+                shm_ptr->tab_vendeurs[num_vendeur].etat = LIBRE;
             }else{
+
                 // Si vente accepté ->
                 // Tirer montant aléatoire
                 msg.montant = rand() % (MONTANT_MAX - MONTANT_MIN + 1) + MONTANT_MIN;
@@ -127,7 +149,8 @@ int main(int argc, char* argv[]){
                 msg.mtype = 10000; // type commun pour les caissiers
 
                 envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
-
+                shm_ptr->tab_vendeurs[num_vendeur].etat = LIBRE;
+                    
                 if (envoi == -1){
                     perror("Erreur msgsnd (coté serveur), Ligne 126 (envoi du message au caissier pour se préparer à recevoir le client)");
                     exit(EXIT_FAILURE);
@@ -137,5 +160,6 @@ int main(int argc, char* argv[]){
         }
     }
 
+    shmdt(shm_ptr);
     exit(EXIT_SUCCESS);
 }
