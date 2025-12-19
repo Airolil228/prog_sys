@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 
     key_t key = (key_t)atoi(argv[5]);
 
-    struct msgbuf *msg;
+    struct message msg;
     ssize_t reception;
     int envoi;
     int stop = 1;
@@ -55,62 +55,73 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
-    while (!sigusr2recu && stop){
+    while (!sigusr2recu || stop){
+        msg.vendeur_reco = 0;
+        msg.decision = 0;
+        msg.montant = 0;
+        msg.num_caissier = 0; 
+        msg.type_message = 0; 
 
-        fprintf(stderr,"Le client %d veut acheter au rayon %d au près du vendeur %d \n",getpid(),num_rayon,num_vendeur);
+        fprintf(stderr,"Le client %d veut acheter au rayon %d au près du vendeur %d \n",num_client,num_rayon,num_vendeur);
 
         // Il prend le vendeur désigné et lui fait savoir son rayon
-        msg->mtype = num_vendeur;   // vendeur ciblé
-        msg->client_id = num_client;
-        msg->rayon = num_rayon;
-        envoi = msgsnd(msgid, &msg, sizeof(msg),0);
+        msg.mtype = VENDEUR_BASE + num_vendeur;   // vendeur ciblé
+        msg.client_id = num_client;
+        msg.rayon = num_rayon;
+        msg.num_vendeur = num_vendeur;
+
+        envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
 
         if (envoi == -1){
-            perror("Erreur msgsnd");
+            perror("Erreur msgsnd (coté client), Ligne 71 (Premiere requete client à ce vendeur)");
             exit(EXIT_FAILURE);
         }
 
         // En attente de la réponse du vendeur
-        reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
+        reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_BASE + num_client, 0);
         
         if (reception == -1){
-            perror("Erreur msgrcv");
+            perror("Erreur msgrcv (coté client), Ligne 79 (Premiere reponse vendeur : specialisation du rayon)");
             exit(EXIT_FAILURE);
         }
 
-        if (msg->vendeur_reco != num_vendeur){
-            num_vendeur = msg->vendeur_reco;
-            fprintf(stderr,"Le client %d change de vendeur, il va vers : %d \n",getpid(),num_vendeur);
+        if (msg.vendeur_reco != num_vendeur){
+            num_vendeur = msg.vendeur_reco;
+            fprintf(stderr,"Le client %d change de vendeur, il va vers : %d \n",num_client,num_vendeur);
             // Fin pour ce tour, le vendeur n'est pas le bon.
         }else{
 
-            fprintf(stderr,"Le client %d a trouvé le bon vendeur : %d \n",getpid(),num_vendeur);
+            fprintf(stderr,"Le client %d a trouvé le bon vendeur : %d \n",num_client,num_vendeur);
             // Le vendeur passe un certain temps avant de repondre puis redeclenche la procédure
-            reception = msgrcv(msgid, &msg, sizeof(msg), num_vendeur, 0);
+            reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_BASE + num_client, 0);
         
             if (reception == -1){
-                perror("Erreur msgrcv");
+                perror("Erreur msgrcv (coté client), Ligne 94 (Le vendeur a attendu puis a envoyé sa réponse)");
                 exit(EXIT_FAILURE);
             }
 
             // Decision 1 ou 0
             if ((rand() % 101) > PROBA_ACHAT){
-                msg->decision = 1;
+                msg.decision = 1;
             }else{
-                msg->decision = 0;
+                msg.decision = 0;
             }
-            envoi = msgsnd(msgid, &msg, sizeof(msg),0);
+            msg.mtype = VENDEUR_BASE + num_vendeur;
+            envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
 
             if (envoi == -1){
-                perror("Erreur msgsnd");
+                perror("Erreur msgsnd (coté client), Ligne 109 (Rendu de la décision du client)");
                 exit(EXIT_FAILURE);
             }
 
-            if (msg->decision == 0){
+            if (msg.decision == 0){
+                fprintf(stderr,"Le client %d change de vendeur, il va vers %d \n",num_client,num_vendeur);
                 stop = 1;
             }else{
                 // S'occuper avec le caissier
-                fprintf(stderr,"Le client %d va à la caisse.\n",getpid());
+                fprintf(stderr,"Le client %d va à la caisse.\n",num_client);
+
+                stop = 1;
             }
 
         }

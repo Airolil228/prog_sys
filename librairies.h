@@ -16,6 +16,8 @@
 #include <sys/msg.h>
 #include <time.h>
 
+#define MAX_VENDEUR_CAISSIER_CLIENT 100
+
 #define NB_CHAR_EXEC 16
 #define NB_RAYON 10
 
@@ -24,6 +26,10 @@
 
 #define PROBA_ACHAT 60
 #define TAILLE 1026
+
+#define VENDEUR_BASE 1000
+
+#define CLIENT_BASE 2000
 
 int nb_rayon_inoccupe;
 int tab_rayon_inoccupe[NB_RAYON];
@@ -72,7 +78,7 @@ typedef struct { //
     int SimulationActive; 
 }magasin;
 
-struct msgbuf {
+struct message {
     long mtype ;
     int client_id;
     int rayon;

@@ -19,7 +19,7 @@ void usage(char * appel){
     exit(EXIT_FAILURE);
 }
 
-void fonc_dest(char *shm_ptr,int shmid,int msgid){
+void fonc_dest(magasin *shm_ptr,int shmid,int msgid){
     shmdt(shm_ptr);//Détachement  
     shmctl(shmid, IPC_RMID, NULL);//Destruction
 
@@ -42,7 +42,7 @@ int main(int argc, char* argv[]){
     char str_nb_caissiers[NB_CHAR_EXEC];
     char str_nb_clients[NB_CHAR_EXEC];
     key_t key; char str_key[NB_CHAR_EXEC];
-    char *shm_ptr;//L'espace mémoire de procecessus 
+    magasin *shm_ptr;//L'espace mémoire de procecessus 
     int msgid;
     int shmid; // seg.mem.part CLIENT <=> VENDEUR et CLIENT <=> CASIER
 
@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
 
     /* Génération d'une clé unique */
     key = ftok(".",'M');
-    if (key == 1){
+    if (key == -1){
         perror("Erreur ftok : Ligne 81");
         return 1;
     }
@@ -105,7 +105,8 @@ int main(int argc, char* argv[]){
     }
 
     //Creation de seg.mémoire.partagé
-    shmid = shmget(key,sizeof(TAILLE),IPC_CREAT | 0666);
+    printf("sizeof(magasin) = %lu\n", sizeof(magasin));
+    shmid = shmget(key,sizeof(magasin),IPC_CREAT | 0666);
 
     if (shmid == -1){
         perror("erreur shmget : Ligne 98 ");
@@ -115,10 +116,17 @@ int main(int argc, char* argv[]){
     // Attacher le segment au processus 
     shm_ptr = shmat(shmid,NULL,0);
 
-    if (shm_ptr == (char*)-1){
+    if (shm_ptr == (magasin*)-1){
         perror("erreur shmat : Ligne 106");
         exit(-1);
     }
+
+    memset(shm_ptr, 0, sizeof(magasin));
+
+    shm_ptr->nb_vendeurs = m.nb_vendeurs;
+    shm_ptr->nb_caissiers = m.nb_caissiers;
+    shm_ptr->nb_clients = m.nb_clients;
+    shm_ptr->SimulationActive = 1;
      
     //UTILISATION 
 
@@ -189,7 +197,7 @@ int main(int argc, char* argv[]){
 
         m.tab_clients[i].pid = fork();
 
-        if( m.tab_clients[i].pid < -1){
+        if( m.tab_clients[i].pid == -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
         }else if( m.tab_clients[i].pid == 0 ){
