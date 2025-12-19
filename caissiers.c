@@ -39,7 +39,6 @@ int main(int argc, char* argv[]){
     //recupère le sémaphore
     int sem_id = semget(key,5,0666);
 
-
     /* Récupération du segment de mémoire partagée */
     int shmid = shmget(key, sizeof(magasin), 0666);
     if (shmid == -1){
@@ -77,11 +76,11 @@ int main(int argc, char* argv[]){
         }
 
         //Mettre à jour l'état 
-        V(sem_id,SEM_CAISSIERS);
+        P(sem_id,SEM_CAISSIERS); // LOCK
         shm_ptr->tab_caissiers[num_caissier].nb_clients_attente++;
         shm_ptr->tab_caissiers[num_caissier].etat = OCCUPE;
         shm_ptr->tab_caissiers[num_caissier].client_actuel = msg.client_id;
-        P(sem_id,SEM_CAISSIERS);
+        V(sem_id,SEM_CAISSIERS); // UNLOCK
 
         //Récuperer le montant 
         int montant = msg.montant; 
@@ -106,19 +105,16 @@ int main(int argc, char* argv[]){
         //Cassier terminé: Remettre à LIBRE
         fprintf(stdout,"Caissier %d a terminé avec le client %d\n", 
                 num_caissier, 
-                msg.client_id);
+                msg.client_id
+        );
         
         //Remettre à LIBRE
-        
+        P(sem_id,SEM_CAISSIERS);// LOCK
         shm_ptr->tab_caissiers[num_caissier].etat = LIBRE;
         shm_ptr->tab_caissiers[num_caissier].client_actuel = -1;
         shm_ptr->tab_caissiers[num_caissier].nb_clients_attente--;
-
+        V(sem_id,SEM_CAISSIERS);// UNLOCK 
     }
-
     
-
-
-
     exit(EXIT_SUCCESS);
 }
