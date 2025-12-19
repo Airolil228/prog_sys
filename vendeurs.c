@@ -191,7 +191,7 @@ int main(int argc, char* argv[]){
                 // Tirer montant aléatoire
                 msg.montant = rand() % (MONTANT_MAX - MONTANT_MIN + 1) + MONTANT_MIN;
                 // Envoyer aux caissiers
-                msg.mtype = 10000; // type commun pour les caissiers
+                msg.mtype = CAISSIER_DISCUSSION_BASE - 1; // type commun pour les caissiers
                 msg.vendeur_reco = num_vendeur; // Permet de bien montrer qu'on reste avec le meme vendeur
                 envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
                 shm_ptr->tab_vendeurs[num_vendeur].etat = LIBRE;

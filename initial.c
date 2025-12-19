@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
     if (argc != 4){
         usage(argv[0]);
     }
-    int i,j; int attente;
+    int i,j; //int attente;
    
     int nb_vendeurs = atoi(argv[1]);
     int nb_caissiers = atoi(argv[2]);
@@ -260,13 +260,13 @@ int main(int argc, char* argv[]){
 
     // Debuter tous
     for (j=0; j<shm_ptr->nb_clients;j++){
-        kill(l.tab_clients[i], SIGUSR1);
+        kill(l.tab_clients[j], SIGUSR1);
     }
     for (j=0; j<shm_ptr->nb_vendeurs;j++){
-        kill(l.tab_vendeurs[i], SIGUSR1);
+        kill(l.tab_vendeurs[j], SIGUSR1);
     }
     for (j=0; j<shm_ptr->nb_caissiers;j++){
-        kill(l.tab_caissiers[i], SIGUSR1);
+        kill(l.tab_caissiers[j], SIGUSR1);
     }
 
     sleep(2);
@@ -300,13 +300,13 @@ int main(int argc, char* argv[]){
 
     // Détruire les IPCs
     for (j=0; j<shm_ptr->nb_clients;j++){
-        kill(l.tab_clients[i], SIGUSR2);
+        kill(l.tab_clients[j], SIGUSR2);
     }
     for (j=0; j<shm_ptr->nb_vendeurs;j++){
-        kill(l.tab_vendeurs[i], SIGUSR2);
+        kill(l.tab_vendeurs[j], SIGUSR2);
     }
     for (j=0; j<shm_ptr->nb_caissiers;j++){
-        kill(l.tab_caissiers[i], SIGUSR2);
+        kill(l.tab_caissiers[j], SIGUSR2);
     }
 
     fonc_dest(shm_ptr,shmid,msgid,sem_id); 

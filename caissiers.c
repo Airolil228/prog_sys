@@ -35,7 +35,8 @@ int main(int argc, char* argv[]){
     struct message msg;
     ssize_t reception;
     int temps; //variable aleatoire
-    
+    int montant;
+    int envoi;
 
 
     struct sigaction sa;
@@ -63,7 +64,7 @@ int main(int argc, char* argv[]){
     srand(time(NULL));
 
     //recupère le sémaphore
-    int sem_id = semget(key,5,0666);
+    //int sem_id = semget(key,5,0666);
 
     /* Récupération du segment de mémoire partagée */
     int shmid = shmget(key, sizeof(magasin), 0666);
@@ -95,7 +96,7 @@ int main(int argc, char* argv[]){
         //Attendre un client
         fprintf(stderr, "Caissier %d attend un client...\n",num_caissier);
         
-        reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), 10000, 0);
+        reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CAISSIER_DISCUSSION_BASE - 1, 0);
 
         if(reception == -1 && errno != EINTR){
             perror("Erreur msgrcv (cassier)");
@@ -109,15 +110,12 @@ int main(int argc, char* argv[]){
         //V(sem_id,SEM_CAISSIERS); // UNLOCK
 
         //Récuperer le montant 
-        int montant = msg.montant; 
-        fprintf(stdout,"Caissier %d: Client %d doit payer %d...\n",
-            num_caissier,
-            msg.client_id,
-            montant);
+        montant = msg.montant; 
+        fprintf(stdout,"Caissier %d: Client %d doit payer %d...\n",num_caissier,msg.client_id,montant);
 
         //Communiquer le prix au client 
         msg.mtype = CLIENT_DISCUSSION_BASE + msg.client_id;
-        int envoi = msgsnd(msgid,&msg,sizeof(struct message) - sizeof(long),0);
+        envoi = msgsnd(msgid,&msg,sizeof(struct message) - sizeof(long),0);
 
         if(envoi == -1){
             perror("Erreur msgsnd (cassier -> cleint)");
@@ -127,6 +125,15 @@ int main(int argc, char* argv[]){
         //Temps de paiement alétoire 
         temps = rand() % 5+1; // 1 à 5 secondes (ajouster )
         sleep(temps); 
+
+        //Communiquer la conclusion de l'achat au client
+        msg.mtype = CLIENT_DISCUSSION_BASE + msg.client_id;
+        envoi = msgsnd(msgid,&msg,sizeof(struct message) - sizeof(long),0);
+
+        if(envoi == -1){
+            perror("Erreur msgsnd (cassier -> cleint)");
+            exit(EXIT_FAILURE);
+        }
 
         //Cassier terminé: Remettre à LIBRE
         fprintf(stdout,"Caissier %d a terminé avec le client %d\n", 
@@ -140,6 +147,7 @@ int main(int argc, char* argv[]){
         shm_ptr->tab_caissiers[num_caissier].client_actuel = -1;
         shm_ptr->tab_caissiers[num_caissier].nb_clients_attente--;
         //V(sem_id,SEM_CAISSIERS);// UNLOCK 
+
     }
     fprintf(stderr, "Fin du caissier %d \n",getpid());
     

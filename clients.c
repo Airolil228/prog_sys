@@ -50,6 +50,7 @@ int main(int argc, char* argv[]){
     int num_rayon = rand() % NB_RAYON; // Entre 0 et 9 
 
     int num_vendeur = rand() % (m.nb_vendeurs); //Ou on peut aussi récuperer le vendeur le moins occupé 
+    int num_caissier = rand() % (m.nb_caissiers); //Ou on peut aussi récuperer le vendeur le moins occupé 
 
 
     struct sigaction sa;
@@ -151,7 +152,40 @@ int main(int argc, char* argv[]){
                 // S'occuper avec le caissier
                 fprintf(stderr,"Ligne 122 : Le client %d va à la caisse.\n",num_client);
 
-                break; // va a la caisse
+                //break; // va a la caisse
+
+                msg.mtype = CAISSIER_DISCUSSION_BASE + num_caissier;
+                msg.client_id = num_client;
+
+                envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
+
+                if (envoi == -1){
+                    fprintf(stderr,"Erreur msgsnd (coté client), Ligne %d (Envoie du num de client au caissier) \n", __LINE__);
+                    perror("msgsnd");
+                    exit(EXIT_FAILURE);
+                }
+
+                // En attente de la réponse du caissier
+                reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_DISCUSSION_BASE + num_client, 0);
+                
+                if (reception == -1){
+                    fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Premiere reponse caissier : prix) \n");
+                    perror("msgrcv");
+                    exit(EXIT_FAILURE);
+                }
+
+
+                // Le caissier conclu l'achat
+                reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_DISCUSSION_BASE + num_client, 0);
+                
+                if (reception == -1){
+                    fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Le caissier conclu l'achat) \n");
+                    perror("msgrcv");
+                    exit(EXIT_FAILURE);
+                }
+
+                fprintf(stderr,"Le client %d fini, il a acheté %d dihram au rayon %d.\n",num_client,msg.montant,num_rayon);
+
             }
 
         }

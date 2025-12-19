@@ -33,6 +33,8 @@
 
 #define VENDEUR_DISCUSSION_BASE 3000
 
+#define CAISSIER_DISCUSSION_BASE 4000
+
 #define SEM_VENDEURS   0    // Protège tab_vendeurs
 #define SEM_CAISSIERS  1    // Protège tab_caissiers
 #define SEM_CLIENTS    2    // Protège tab_clients
