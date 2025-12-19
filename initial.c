@@ -38,7 +38,6 @@ void init_struct(magasin* shm_ptr,int nbVend,int nbCaisse){
         shm_ptr->tab_vendeurs[i].nb_clients_attente = 0;
         shm_ptr->tab_vendeurs[i].client_actuel = -1; 
         shm_ptr->tab_vendeurs[i].etat = LIBRE; 
-        shm_ptr->tab_vendeurs[i].pid = 0; // Initialisation du pid (recommandé)
 
         if(i < NB_RAYON){
             shm_ptr->tab_vendeurs[i].rayon_expertise = i;
@@ -53,7 +52,6 @@ void init_struct(magasin* shm_ptr,int nbVend,int nbCaisse){
         shm_ptr->tab_caissiers[i].nb_clients_attente = 0;  
         shm_ptr->tab_caissiers[i].client_actuel = -1; 
         shm_ptr->tab_caissiers[i].etat = LIBRE; 
-        shm_ptr->tab_caissiers[i].pid = 0; 
     }
 }
 
@@ -75,6 +73,10 @@ int main(int argc, char* argv[]){
     magasin *shm_ptr;//L'espace mémoire de procecessus 
     int msgid;
     int shmid; // seg.mem.part CLIENT <=> VENDEUR et CLIENT <=> CASIER
+    liste_pid l;
+    for(i=0;i<nb_clients;i++){l.tab_clients[i] = 0;}
+    for(i=0;i<nb_vendeurs;i++){l.tab_vendeurs[i] = 0;}
+    for(i=0;i<nb_caissiers;i++){l.tab_caissiers[i] = 0;}
     
     struct sigaction sa_usr1;
     sa_usr1.sa_handler = initial_sigusr1;
@@ -114,11 +116,11 @@ int main(int argc, char* argv[]){
     }
 
     if(nb_caissiers < 1){
-        fprintf(stderr,"usage : nombre_caissiers > 1 \n"); 
+        fprintf(stderr,"usage : nombre_caissiers >= 1 \n"); 
         usage(argv[0]);
     }
 
-    if(nb_clients < 1){
+    if(nb_clients < 2){
         fprintf(stderr,"usage : nombre_clients > 1 \n"); 
         usage(argv[0]);
     }
@@ -177,12 +179,12 @@ int main(int argc, char* argv[]){
 
     for (i=0; i<shm_ptr->nb_vendeurs;i++){
 
-        shm_ptr->tab_vendeurs[i].pid = fork();
+        l.tab_vendeurs[i] = fork();
 
-        if( shm_ptr->tab_vendeurs[i].pid < -1){
+        if( l.tab_vendeurs[i] < -1){
             fprintf(stderr,"Erreur de création de processus \n");
             exit(EXIT_FAILURE);
-        }else if( shm_ptr->tab_vendeurs[i].pid == 0 ){
+        }else if( l.tab_vendeurs[i] == 0 ){
             fprintf(stderr,"Vendeur créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
@@ -202,12 +204,13 @@ int main(int argc, char* argv[]){
     
 
     for (i=0; i< shm_ptr->nb_caissiers;i++){
-        shm_ptr->tab_caissiers[i].pid = fork();
 
-        if( shm_ptr->tab_caissiers[i].pid < -1){
+        l.tab_caissiers[i] = fork();
+
+        if( l.tab_caissiers[i] < -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
-        }else if( shm_ptr->tab_caissiers[i].pid == 0 ){
+        }else if( l.tab_caissiers[i] == 0 ){
             fprintf(stderr,"Caissier créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
@@ -227,12 +230,12 @@ int main(int argc, char* argv[]){
 
     for (i=0; i< shm_ptr->nb_clients;i++){
 
-        shm_ptr->tab_clients[i].pid = fork();
+        l.tab_clients[i] = fork();
 
-        if( shm_ptr->tab_clients[i].pid == -1){
+        if( l.tab_clients[i] == -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
-        }else if( shm_ptr->tab_clients[i].pid == 0 ){
+        }else if( l.tab_clients[i] == 0 ){
             fprintf(stderr,"Client créé : %d \n", getpid());
 
             sprintf(num_creation, "%d", i);
@@ -241,7 +244,7 @@ int main(int argc, char* argv[]){
 
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
-            fprintf(stderr,"TEST TEST TEST TEST TEST\n");
+            fprintf(stderr,"TEST ");
             if( execv("./clients", args) == -1 ) {
                 perror("execv clients failed");
                 exit(EXIT_FAILURE);
@@ -253,23 +256,29 @@ int main(int argc, char* argv[]){
 
     sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
+    sleep(1);
 
     // Debuter tous
     for (j=0; j<shm_ptr->nb_clients;j++){
-        kill(shm_ptr->tab_clients[j].pid, SIGUSR1);
+        kill(l.tab_clients[i], SIGUSR1);
     }
     for (j=0; j<shm_ptr->nb_vendeurs;j++){
-        kill(shm_ptr->tab_vendeurs[j].pid, SIGUSR1);
+        kill(l.tab_vendeurs[i], SIGUSR1);
     }
     for (j=0; j<shm_ptr->nb_caissiers;j++){
-        kill(shm_ptr->tab_caissiers[j].pid, SIGUSR1);
+        kill(l.tab_caissiers[i], SIGUSR1);
     }
 
+    sleep(2);
+
+    for (i = 0; i < shm_ptr->nb_clients; i++) {
+        fprintf(stderr, "attente du client[%d] pid=%d\n",i, l.tab_clients[i]);
+    }
 
     /* On attend la terrminaison : */
     fprintf(stderr,"Attente (robuste) de leur terminaison \n");
     for (i = 0; i < shm_ptr->nb_clients; i++) {
-        waitpid(shm_ptr->tab_clients[i].pid, NULL, 0);
+        waitpid(l.tab_clients[i], NULL, 0);
     }
     fprintf(stderr,"\n");
 
@@ -291,13 +300,13 @@ int main(int argc, char* argv[]){
 
     // Détruire les IPCs
     for (j=0; j<shm_ptr->nb_clients;j++){
-        kill(shm_ptr->tab_clients[j].pid, SIGUSR2);
+        kill(l.tab_clients[i], SIGUSR2);
     }
     for (j=0; j<shm_ptr->nb_vendeurs;j++){
-        kill(shm_ptr->tab_vendeurs[j].pid, SIGUSR2);
+        kill(l.tab_vendeurs[i], SIGUSR2);
     }
     for (j=0; j<shm_ptr->nb_caissiers;j++){
-        kill(shm_ptr->tab_caissiers[j].pid, SIGUSR2);
+        kill(l.tab_caissiers[i], SIGUSR2);
     }
 
     fonc_dest(shm_ptr,shmid,msgid,sem_id); 

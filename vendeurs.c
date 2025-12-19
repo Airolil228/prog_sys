@@ -45,7 +45,7 @@ int main(int argc, char* argv[]){
 
     sa.sa_handler = debut;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
+    sa.sa_flags = SA_RESTART;
 
 
     if (sigaction(SIGUSR1, &sa, NULL) < 0) {

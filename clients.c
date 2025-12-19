@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
         usage(argv[0]);
     }
     fflush(stderr);
-    fprintf(stderr,"TEST TEST TEST TEST TEST");
+    fprintf(stderr,"TEST\n");
     int num_client = atoi(argv[4]);
     magasin m;
     m.nb_vendeurs = atoi(argv[1]);
@@ -56,7 +56,7 @@ int main(int argc, char* argv[]){
 
     sa.sa_handler = debut;
     sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
+    sa.sa_flags = SA_RESTART;
 
 
     if (sigaction(SIGUSR1, &sa, NULL) < 0) {
@@ -153,6 +153,8 @@ int main(int argc, char* argv[]){
 
         }
     }
+
+    fprintf(stderr, "Fin du client %d \n",getpid());
 
     exit(EXIT_SUCCESS);
 }

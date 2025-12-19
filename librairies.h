@@ -38,6 +38,11 @@
 #define SEM_CLIENTS    2    // Protège tab_clients
 #define SEM_RAYONS     3    // Protège tab_rayon
 
+typedef struct {
+    pid_t tab_vendeurs[100];
+    pid_t tab_clients[100];
+    pid_t tab_caissiers[100];
+}liste_pid;
 
 typedef enum{
     LIBRE = 0,
@@ -45,7 +50,6 @@ typedef enum{
 }Etat;
 
 typedef struct{
-    pid_t pid;
     int numero;
     int rayon_expertise;
     int nb_clients_attente;
@@ -54,7 +58,6 @@ typedef struct{
 }InfoVend;
 
 typedef struct{
-    pid_t pid;
     int numero;
     int nb_clients_attente;
     int client_actuel;
@@ -62,7 +65,6 @@ typedef struct{
 }InfoCassier; 
 
 typedef struct{
-    pid_t pid;
     int montant;
     int valide;  
 }InfoClient;
