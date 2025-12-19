@@ -60,8 +60,6 @@ void init_struct(int nbVend,int nbCaisse){
     }
 }
 
-
-
 int main(int argc, char* argv[]){
     if (argc != 4){
         usage(argv[0]);
