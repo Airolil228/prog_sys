@@ -1,6 +1,7 @@
 #include "librairies.h"
 
 int sigtermrecu = 0; 
+magasin m;
 
 void arret(int sig){
     printf("signal %d (TERM) reçu (Initial) \n", sig); 
@@ -19,20 +20,48 @@ void usage(char * appel){
     exit(EXIT_FAILURE);
 }
 
-void fonc_dest(magasin *shm_ptr,int shmid,int msgid){
+void fonc_dest(magasin *shm_ptr,int shmid,int msgid,int sem_id){
     shmdt(shm_ptr);//Détachement  
     shmctl(shmid, IPC_RMID, NULL);//Destruction
-
+    semctl(sem_id, 0, IPC_RMID);//Destruction 
      
     msgctl(msgid, IPC_RMID, NULL);// Destruction file de message
 }
+
+void init_struct(int nbVend,int nbCaisse){
+    // Init vendeurs
+    for(int i = 0; i < nbVend; i++){
+        m.tab_vendeurs[i].numero = i;
+        m.tab_vendeurs[i].nb_clients_attente = 0;
+        m.tab_vendeurs[i].client_actuel = -1; 
+        m.tab_vendeurs[i].etat = LIBRE; 
+        m.tab_vendeurs[i].pid = 0; // Initialisation du pid (recommandé)
+
+        if(i < NB_RAYON){
+            m.tab_vendeurs[i].rayon_expertise = i;
+        } else {
+            m.tab_vendeurs[i].rayon_expertise = rand() % NB_RAYON;
+        }
+    }
+
+    
+    for(int i = 0; i < nbCaisse; i++){
+        m.tab_caissiers[i]. numero = i;  
+        m.tab_caissiers[i].nb_clients_attente = 0;  
+        m.tab_caissiers[i].client_actuel = -1; 
+        m.tab_caissiers[i].etat = LIBRE; 
+        m.tab_caissiers[i].pid = 0; 
+    }
+}
+
+
 
 int main(int argc, char* argv[]){
     if (argc != 4){
         usage(argv[0]);
     }
     int i,j; int attente;
-    magasin m;
+   
     m.nb_vendeurs = atoi(argv[1]);
     m.nb_caissiers = atoi(argv[2]);
     m.nb_clients = atoi(argv[3])+1;
@@ -45,6 +74,7 @@ int main(int argc, char* argv[]){
     magasin *shm_ptr;//L'espace mémoire de procecessus 
     int msgid;
     int shmid; // seg.mem.part CLIENT <=> VENDEUR et CLIENT <=> CASIER
+    
 
     struct sigaction sa;
 
@@ -127,9 +157,16 @@ int main(int argc, char* argv[]){
     shm_ptr->nb_caissiers = m.nb_caissiers;
     shm_ptr->nb_clients = m.nb_clients;
     shm_ptr->SimulationActive = 1;
-     
-    //UTILISATION 
+    
+    //Creation l'ensemble de semaphore
+    int sem_id = semget(key, 10, IPC_CREAT | 0666);
+    if(sem_id < -1){
+        perror("erreur semget 136"); 
+        exit(EXIT_FAILURE);
+    }
 
+    //============================================== UTILISATION =================================== // 
+    init_struct(m.nb_vendeurs,m.nb_caissiers);
 
     for (i=0; i<m.nb_vendeurs;i++){
 
@@ -275,6 +312,7 @@ int main(int argc, char* argv[]){
         kill(m.tab_caissiers[j].pid, SIGUSR2);
     }
 
-    fonc_dest(shm_ptr,shmid,msgid); 
+    fonc_dest(shm_ptr,shmid,msgid,sem_id); 
     exit(EXIT_SUCCESS);
 }
+
