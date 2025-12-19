@@ -87,7 +87,7 @@ int main(int argc, char* argv[]){
         msg.num_caissier = 0; 
         msg.type_message = 0; 
 
-        fprintf(stderr,"Ligne 65 :Le client %d veut acheter au rayon %d au près du vendeur %d \n",num_client,num_rayon,num_vendeur);
+        fprintf(stderr,"Ligne %d :Le client %d veut acheter au rayon %d au près du vendeur %d \n", __LINE__,num_client,num_rayon,num_vendeur);
 
         // Il prend le vendeur désigné et lui fait savoir son rayon
         msg.mtype = VENDEUR_BASE + num_vendeur;   // vendeur ciblé
@@ -98,7 +98,8 @@ int main(int argc, char* argv[]){
         envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
 
         if (envoi == -1){
-            perror("Erreur msgsnd (coté client), Ligne 71 (Premiere requete client à ce vendeur)");
+            fprintf(stderr,"Erreur msgsnd (coté client), Ligne %d (Premiere requete client à ce vendeur) \n", __LINE__);
+            perror("msgsnd");
             exit(EXIT_FAILURE);
         }
 
@@ -106,7 +107,8 @@ int main(int argc, char* argv[]){
         reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_DISCUSSION_BASE + num_client, 0);
         
         if (reception == -1){
-            perror("Erreur msgrcv (coté client), Ligne 79 (Premiere reponse vendeur : specialisation du rayon)");
+            fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Premiere reponse vendeur : specialisation du rayon) \n");
+            perror("msgrcv");
             exit(EXIT_FAILURE);
         }
 
@@ -136,7 +138,8 @@ int main(int argc, char* argv[]){
             envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
 
             if (envoi == -1){
-                perror("Erreur msgsnd (coté client), Ligne 109 (Rendu de la décision du client)");
+                fprintf(stderr,"Erreur msgsnd (coté client), Ligne %d (Rendu de la décision du client) \n", __LINE__);
+                perror("msgsnd");
                 exit(EXIT_FAILURE);
             }
 

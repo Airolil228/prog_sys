@@ -118,16 +118,17 @@ int main(int argc, char* argv[]){
 
     while (!sigusr2recu){
 
-        fprintf(stderr,"Ligne 88 : Le vendeur %d attend une requete d'un client \n",num_vendeur);
+        fprintf(stderr,"Ligne %d : Le vendeur %d attend une requete d'un client \n", __LINE__,num_vendeur);
         reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), VENDEUR_BASE + num_vendeur, 0);
         
         if (reception == -1){
-            perror("Erreur msgrcv (coté vendeur), Ligne 92 (reception de la requete du client)");
+            fprintf(stderr,"Erreur msgrcv (coté vendeur), Ligne %d (reception de la requete du client) \n", __LINE__);
+            perror("msgrcv");
             break;
         }
 
         // Traitement du message
-        fprintf(stderr,"Ligne 97 : Le vendeur %d recoit une requete du client %d \n",num_vendeur, msg.client_id);
+        fprintf(stderr,"Ligne %d : Le vendeur %d recoit une requete du client %d \n", __LINE__,num_vendeur, msg.client_id);
         shm_ptr->tab_vendeurs[num_vendeur].nb_clients_attente++;
 
         if (shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise != msg.rayon){
@@ -139,11 +140,12 @@ int main(int argc, char* argv[]){
                 vendeur_recommande = VENDEUR_BASE;
             }*/
             msg.vendeur_reco = vendeur_recommande;  // Vendeur à recommander à déterminer
-            fprintf(stderr,"Ligne 109 : Le vendeur %d a redirigé le client %d vers le vendeur %d\n",num_vendeur, msg.client_id, vendeur_recommande);
+            fprintf(stderr,"Ligne %d : Le vendeur %d a redirigé le client %d vers le vendeur %d\n", __LINE__,num_vendeur, msg.client_id, vendeur_recommande);
             envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
 
             if (envoi == -1){
-                perror("Erreur msgsnd (coté vendeur), Ligne 113 (envoi du vendeur recommandé)");
+                fprintf(stderr,"Erreur msgsnd (coté vendeur), Ligne %d (envoi du vendeur recommandé) \n", __LINE__);
+                perror("msgsnd");
             }
             shm_ptr->tab_vendeurs[num_vendeur].etat = LIBRE;
             // Retour à l'attente d'un autre client -> Fin du tour
@@ -154,18 +156,19 @@ int main(int argc, char* argv[]){
             // Le vendeur prend en charge le client
             shm_ptr->tab_vendeurs[num_vendeur].etat = OCCUPE;
             shm_ptr->tab_vendeurs[num_vendeur].client_actuel = msg.client_id;
-            fprintf(stderr,"Ligne 124 : Le vendeur %d dors %d secondes\n",num_vendeur, temps);
+            fprintf(stderr,"Ligne %d : Le vendeur %d dors %d secondes\n", __LINE__,num_vendeur, temps);
             sleep(temps);
 
             // reveil le client (message)
             msg.mtype = CLIENT_DISCUSSION_BASE + msg.client_id; // Reponse vers le client
             msg.vendeur_reco = num_vendeur; // Permet de bien montrer qu'on reste avec le meme vendeur
-            fprintf(stderr,"Ligne 130 : Le vendeur %d répond au client %d qu'il est le specialiste de ce rayon %d\n",num_vendeur, msg.client_id, msg.rayon);
+            fprintf(stderr,"Ligne %d : Le vendeur %d répond au client %d qu'il est le specialiste de ce rayon %d\n", __LINE__,num_vendeur, msg.client_id, msg.rayon);
 
             envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
 
             if (envoi == -1){
-                perror("Erreur msgsnd (coté serveur), Ligne 135 (envoi du reveil de client)");
+                fprintf(stderr,"Erreur msgsnd (coté serveur), Ligne %d (envoi du reveil de client) \n", __LINE__);
+                perror("msgsnd");
                 exit(EXIT_FAILURE);
             }
 
@@ -174,7 +177,8 @@ int main(int argc, char* argv[]){
             reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), VENDEUR_DISCUSSION_BASE + num_vendeur, 0);
 
             if (reception == -1){
-                perror("Erreur msgrcv (coté serveur), Ligne 144 (attente de la décision du client)");
+                fprintf(stderr,"Erreur msgrcv (coté serveur), Ligne %d (attente de la décision du client) \n", __LINE__);
+                perror("msgrcv");
                 exit(EXIT_FAILURE);
             }
 
@@ -193,13 +197,15 @@ int main(int argc, char* argv[]){
                 shm_ptr->tab_vendeurs[num_vendeur].etat = LIBRE;
                     
                 if (envoi == -1){
-                    perror("Erreur msgsnd (coté serveur), Ligne 163 (envoi du message au caissier pour se préparer à recevoir le client)");
+                    fprintf(stderr,"Erreur msgsnd (coté serveur), Ligne %d (envoi du message au caissier pour se préparer à recevoir le client) \n", __LINE__);
+                    perror("msgsnd");
                     exit(EXIT_FAILURE);
                 }
             }
             // Fin avec ce client retour étape 1
         }
     }
+    fprintf(stderr, "Fin du vendeur %d \n",getpid());
 
     shmdt(shm_ptr);
     exit(EXIT_SUCCESS);

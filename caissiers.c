@@ -44,6 +44,12 @@ int main(int argc, char* argv[]){
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = SA_RESTART;
 
+    struct sigaction sa2;
+
+    sa2.sa_handler = arret;
+    sigemptyset(&sa2.sa_mask);
+    sa2.sa_flags = 0;
+
 
     if (sigaction(SIGUSR1, &sa, NULL) < 0) {
         perror("Erreur sigaction");
@@ -53,13 +59,6 @@ int main(int argc, char* argv[]){
     while (!sigusr1recu){
         pause();
     }
-
-
-    struct sigaction sa2;
-
-    sa2.sa_handler = arret;
-    sigemptyset(&sa2.sa_mask);
-    sa2.sa_flags = 0;
 
     srand(time(NULL));
 
@@ -103,11 +102,11 @@ int main(int argc, char* argv[]){
         }
 
         //Mettre à jour l'état 
-        P(sem_id,SEM_CAISSIERS); // LOCK
+        //P(sem_id,SEM_CAISSIERS); // LOCK
         shm_ptr->tab_caissiers[num_caissier].nb_clients_attente++;
         shm_ptr->tab_caissiers[num_caissier].etat = OCCUPE;
         shm_ptr->tab_caissiers[num_caissier].client_actuel = msg.client_id;
-        V(sem_id,SEM_CAISSIERS); // UNLOCK
+        //V(sem_id,SEM_CAISSIERS); // UNLOCK
 
         //Récuperer le montant 
         int montant = msg.montant; 
@@ -136,12 +135,13 @@ int main(int argc, char* argv[]){
         );
         
         //Remettre à LIBRE
-        P(sem_id,SEM_CAISSIERS);// LOCK
+        //P(sem_id,SEM_CAISSIERS);// LOCK
         shm_ptr->tab_caissiers[num_caissier].etat = LIBRE;
         shm_ptr->tab_caissiers[num_caissier].client_actuel = -1;
         shm_ptr->tab_caissiers[num_caissier].nb_clients_attente--;
-        V(sem_id,SEM_CAISSIERS);// UNLOCK 
+        //V(sem_id,SEM_CAISSIERS);// UNLOCK 
     }
+    fprintf(stderr, "Fin du caissier %d \n",getpid());
     
     exit(EXIT_SUCCESS);
 }
