@@ -29,10 +29,10 @@
 
 #define VENDEUR_BASE 1000
 
-#define CLIENT_BASE 2000
+#define CLIENT_DISCUSSION_BASE 2000
 
-int nb_rayon_inoccupe;
-int tab_rayon_inoccupe[NB_RAYON];
+#define VENDEUR_DISCUSSION_BASE 3000
+
 
 typedef enum{
     LIBRE = 0,
@@ -63,6 +63,9 @@ typedef struct{
 }InfoClient;
 
 typedef struct { //
+    int nb_rayon_inoccupe;
+    int tab_rayon_inoccupe[NB_RAYON];
+
     int tab_rayon[NB_RAYON];
 
     int nb_vendeurs;

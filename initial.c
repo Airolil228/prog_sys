@@ -29,8 +29,14 @@ void fonc_dest(magasin *shm_ptr,int shmid,int msgid,int sem_id){
 }
 
 void init_struct(int nbVend,int nbCaisse){
+    int i;
+    m.nb_rayon_inoccupe = NB_RAYON;
+    for (i=0;i<NB_RAYON;i++){
+        m.tab_rayon_inoccupe[i] = i;
+    }
+
     // Init vendeurs
-    for(int i = 0; i < nbVend; i++){
+    for (i = 0; i < nbVend; i++){
         m.tab_vendeurs[i].numero = i;
         m.tab_vendeurs[i].nb_clients_attente = 0;
         m.tab_vendeurs[i].client_actuel = -1; 
@@ -45,8 +51,8 @@ void init_struct(int nbVend,int nbCaisse){
     }
 
     
-    for(int i = 0; i < nbCaisse; i++){
-        m.tab_caissiers[i]. numero = i;  
+    for (i = 0; i < nbCaisse; i++){
+        m.tab_caissiers[i].numero = i;  
         m.tab_caissiers[i].nb_clients_attente = 0;  
         m.tab_caissiers[i].client_actuel = -1; 
         m.tab_caissiers[i].etat = LIBRE; 
@@ -90,10 +96,6 @@ int main(int argc, char* argv[]){
 
 
     // Initialisation des rayons inoccupés pour s'assurer qu'ils sont tous occupés
-    nb_rayon_inoccupe = NB_RAYON;
-    for (i=0;i<NB_RAYON;i++){
-        tab_rayon_inoccupe[i] = i;
-    }
 
     sprintf(str_nb_vendeurs,  "%d", m.nb_vendeurs);  // Conversion des entiers en chaînes de caractères
     sprintf(str_nb_caissiers, "%d", m.nb_caissiers);
@@ -178,7 +180,7 @@ int main(int argc, char* argv[]){
         }else if( m.tab_vendeurs[i].pid == 0 ){
             printf("Vendeur créé : %d \n", getpid());
             
-            sprintf(num_creation, "%d", i+1);
+            sprintf(num_creation, "%d", i);
 
             char * args[] = {"./vendeurs", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
 
