@@ -7,13 +7,6 @@ void arret(int sig){
     sigtermrecu++;
 }
 
-int sigusr1recu = 0; 
-
-void debut(int sig){
-    fprintf(stderr,"Le signal %d commence (dans Initial.c) \n", sig); 
-    sigusr1recu++;
-}
-
 void initial_sigusr1(int sig){
     
 }
@@ -99,12 +92,6 @@ int main(int argc, char* argv[]){
     sa.sa_handler = arret;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
-
-    struct sigaction sa2;
-
-    sa2.sa_handler = debut;
-    sigemptyset(&sa2.sa_mask);
-    sa2.sa_flags = 0;
 
 
     sigset_t mask;
@@ -202,16 +189,7 @@ int main(int argc, char* argv[]){
 
             char * args[] = {"./vendeurs", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
 
-            if (sigaction(SIGUSR1, &sa2, NULL) < 0) {
-                perror("Erreur sigaction");
-                exit(1);
-            }
-
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
-
-            while (!sigusr1recu){
-                pause();
-            }
 
             if( execv("./vendeurs", args) == -1 ) {
                 perror("execv vendeurs failed");
@@ -236,16 +214,7 @@ int main(int argc, char* argv[]){
 
             char * args[] = {"./caissiers", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
 
-            if (sigaction(SIGUSR1, &sa2, NULL) < 0) {
-                perror("Erreur sigaction");
-                exit(1);
-            }
-
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
-
-            while (!sigusr1recu){
-                pause();
-            }
 
             if( execv("./caissiers", args) == -1 ) {
                 perror("execv caissiers failed");
@@ -270,15 +239,8 @@ int main(int argc, char* argv[]){
             
             char * args[] = {"./clients", str_nb_vendeurs, str_nb_caissiers, str_nb_clients, num_creation, str_key, NULL}; // Préparation des arguments pour execv
 
-            if (sigaction(SIGUSR1, &sa2, NULL) < 0) {
-                perror("Erreur sigaction");
-                exit(1);
-            }
-
             sigprocmask(SIG_UNBLOCK, &mask, NULL);
-            while (!sigusr1recu){
-                pause();
-            }
+
             fprintf(stderr,"TEST TEST TEST TEST TEST\n");
             if( execv("./clients", args) == -1 ) {
                 perror("execv clients failed");

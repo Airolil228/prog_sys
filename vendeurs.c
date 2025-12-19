@@ -1,5 +1,12 @@
 #include "librairies.h"
 
+int sigusr1recu = 0; 
+
+void debut(int sig){
+    fprintf(stderr,"Le signal %d commence (dans Initial.c) \n", sig); 
+    sigusr1recu++;
+}
+
 int sigusr2recu = 0; 
 
 void arret(int sig){
@@ -36,9 +43,25 @@ int main(int argc, char* argv[]){
 
     struct sigaction sa;
 
-    sa.sa_handler = arret;
+    sa.sa_handler = debut;
     sigemptyset(&sa.sa_mask);
     sa.sa_flags = 0;
+
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0) {
+        perror("Erreur sigaction");
+        exit(1);
+    }
+
+    while (!sigusr1recu){
+        pause();
+    }
+
+    struct sigaction sa2;
+
+    sa2.sa_handler = arret;
+    sigemptyset(&sa2.sa_mask);
+    sa2.sa_flags = 0;
 
     srand(time(NULL));
 
@@ -88,7 +111,7 @@ int main(int argc, char* argv[]){
     //V(sem_id,SEM_VENDEURS);
 
 
-    if (sigaction(SIGUSR2, &sa, NULL) < 0) {
+    if (sigaction(SIGUSR2, &sa2, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
     }

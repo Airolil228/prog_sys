@@ -1,5 +1,12 @@
 #include "librairies.h"
 
+int sigusr1recu = 0; 
+
+void debut(int sig){
+    fprintf(stderr,"Le signal %d commence (dans Initial.c) \n", sig); 
+    sigusr1recu++;
+}
+
 int sigusr2recu = 0; 
 
 void arret(int sig){
@@ -30,12 +37,6 @@ int main(int argc, char* argv[]){
     ssize_t reception;
     int envoi;
 
-    struct sigaction sa;
-
-    sa.sa_handler = arret;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-
     /* Recup de la file de messages */
     int msgid = msgget(key, 0666 | IPC_CREAT);
 
@@ -51,7 +52,30 @@ int main(int argc, char* argv[]){
     int num_vendeur = rand() % (m.nb_vendeurs); //Ou on peut aussi récuperer le vendeur le moins occupé 
 
 
-    if (sigaction(SIGUSR2, &sa, NULL) < 0) {
+    struct sigaction sa;
+
+    sa.sa_handler = debut;
+    sigemptyset(&sa.sa_mask);
+    sa.sa_flags = 0;
+
+
+    if (sigaction(SIGUSR1, &sa, NULL) < 0) {
+        perror("Erreur sigaction");
+        exit(1);
+    }
+
+    while (!sigusr1recu){
+        pause();
+    }
+
+    struct sigaction sa2;
+
+    sa2.sa_handler = arret;
+    sigemptyset(&sa2.sa_mask);
+    sa2.sa_flags = 0;
+
+
+    if (sigaction(SIGUSR2, &sa2, NULL) < 0) {
         perror("Erreur sigaction");
         exit(1);
     }
