@@ -1,0 +1,78 @@
+Vendeur créé : 56034 
+Vendeur créé : 56035 
+Vendeur créé : 56036 
+Vendeur créé : 56037 
+Vendeur créé : 56038 
+Vendeur créé : 56039 
+Vendeur créé : 56040 
+Vendeur créé : 56041 
+Vendeur créé : 56042 
+Vendeur créé : 56043 
+Caissier créé : 56044 
+Caissier créé : 56045 
+Caissier créé : 56046 
+Caissier créé : 56047 
+Caissier créé : 56048 
+Caissier créé : 56049 
+Caissier créé : 56050 
+Caissier créé : 56051 
+Caissier créé : 56052 
+Caissier créé : 56053 
+Client créé : 56054 
+Client créé : 56055 
+Client créé : 56056 
+Client créé : 56057 
+Client créé : 56058 
+Client créé : 56059 
+Client créé : 56060 
+Client créé : 56061 
+Client créé : 56062 
+Client créé : 56063 
+Client créé : 56064 
+Attente (robuste) de leur terminaison 
+Le client 3 veut acheter au rayon 4 au près du vendeur 5 
+Le client 0 veut acheter au rayon 4 au près du vendeur 5 
+Le vendeur 10 attend une requete d'un client 
+Le vendeur 5 attend une requete d'un client 
+Le vendeur 5 recoit une requete d'un client 
+Le client 6 veut acheter au rayon 4 au près du vendeur 5 
+Le client 9 veut acheter au rayon 4 au près du vendeur 5 
+Le vendeur 7 attend une requete d'un client 
+Le client 10 veut acheter au rayon 4 au près du vendeur 5 
+Le vendeur 1 attend une requete d'un client 
+Caissier 0 attend un client...
+Le vendeur 9 attend une requete d'un client 
+Caissier 2 attend un client...
+Caissier 4 attend un client...
+Caissier 3 attend un client...
+Caissier 1 attend un client...
+Caissier 5 attend un client...
+Le client 3 change de vendeur, il va vers : 6 
+Le client 3 veut acheter au rayon 4 au près du vendeur 6 
+Le client 1 veut acheter au rayon 4 au près du vendeur 5 
+Le vendeur 6 recoit une requete d'un client 
+Le vendeur 4 attend une requete d'un client 
+Le vendeur 8 attend une requete d'un client 
+Le vendeur 5 attend une requete d'un client 
+Le vendeur 5 recoit une requete d'un client 
+Le client 7 veut acheter au rayon 4 au près du vendeur 5 
+Le client 4 veut acheter au rayon 4 au près du vendeur 5 
+Le client 2 veut acheter au rayon 4 au près du vendeur 5 
+Le client 8 veut acheter au rayon 4 au près du vendeur 5 
+Le vendeur 2 attend une requete d'un client 
+Le vendeur 6 attend une requete d'un client 
+Le client 5 veut acheter au rayon 4 au près du vendeur 5 
+Le vendeur 3 attend une requete d'un client 
+Caissier 6 attend un client...
+Caissier 9 attend un client...
+Caissier 8 attend un client...
+Caissier 7 attend un client...
+Le client 3 veut acheter au rayon 4 au près du vendeur 6 
+Le vendeur 5 attend une requete d'un client 
+Le vendeur 5 recoit une requete d'un client 
+Le vendeur 5 attend une requete d'un client 
+Le vendeur 5 recoit une requete d'un client 
+Le vendeur 5 attend une requete d'un client 
+Le vendeur 5 recoit une requete d'un client 
+Le vendeur 5 attend une requete d'un client 
+Le vendeur 5 recoit une requete d'un client 

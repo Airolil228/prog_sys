@@ -18,4 +18,4 @@ clients : clients.c
 	$(CC) $(CFLAGS) clients.c -o clients
 
 clean:
-	rm -fr *.o $(TARGET)
+	rm -fr *.o $(TARGET) 

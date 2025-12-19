@@ -8,12 +8,12 @@ void arret(int sig){
 }
 
 void usage(char * appel){
-    fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num client> <clef file de message> \n", appel);
+    fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> <num client> <clef file de message> <fic_log> \n", appel);
     exit(EXIT_FAILURE);
 }
 
 int main(int argc, char* argv[]){
-    if (argc != 6){
+    if (argc != 7){
         usage(argv[0]);
     }
     int num_client = atoi(argv[4]);
@@ -22,7 +22,9 @@ int main(int argc, char* argv[]){
     m.nb_caissiers = atoi(argv[2]);
     m.nb_clients = atoi(argv[3])+1;
 
-    key_t key = (key_t)atoi(argv[5]);
+    key_t key = (key_t) atoi(argv[5]);
+
+    int fic_log = atoi(argv[6]);
 
     struct message msg;
     ssize_t reception;
@@ -46,7 +48,6 @@ int main(int argc, char* argv[]){
     srand(time(NULL));
 
     int num_rayon = rand() % NB_RAYON; // Entre 0 et 9 
-
     int num_vendeur = rand() % (m.nb_vendeurs + 1) + 1; //Ou on peut aussi récuperer le vendeur le moins occupé 
 
 
@@ -63,7 +64,8 @@ int main(int argc, char* argv[]){
         msg.type_message = 0; 
 
         fprintf(stderr,"Le client %d veut acheter au rayon %d au près du vendeur %d \n",num_client,num_rayon,num_vendeur);
-
+        dprintf(fic_log,"Le client %d veut acheter au rayon %d au près du vendeur %d \n",num_client,num_rayon,num_vendeur);
+        
         // Il prend le vendeur désigné et lui fait savoir son rayon
         msg.mtype = VENDEUR_BASE + num_vendeur;   // vendeur ciblé
         msg.client_id = num_client;
@@ -88,10 +90,14 @@ int main(int argc, char* argv[]){
         if (msg.vendeur_reco != num_vendeur){
             num_vendeur = msg.vendeur_reco;
             fprintf(stderr,"Le client %d change de vendeur, il va vers : %d \n",num_client,num_vendeur);
+            dprintf(fic_log,"Le client %d change de vendeur, il va vers : %d \n",num_client,num_vendeur);
+            
             // Fin pour ce tour, le vendeur n'est pas le bon.
         }else{
 
             fprintf(stderr,"Le client %d a trouvé le bon vendeur : %d \n",num_client,num_vendeur);
+            dprintf(fic_log,"Le client %d veut acheter au rayon %d au près du vendeur %d \n",num_client,num_rayon,num_vendeur);
+        
             // Le vendeur passe un certain temps avant de repondre puis redeclenche la procédure
             reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_BASE + num_client, 0);
         
@@ -116,16 +122,20 @@ int main(int argc, char* argv[]){
 
             if (msg.decision == 0){
                 fprintf(stderr,"Le client %d change de vendeur, il va vers %d \n",num_client,num_vendeur);
+                dprintf(fic_log,"Le client %d change de vendeur, il va vers %d \n",num_client,num_vendeur);
+                
                 stop = 1;
             }else{
                 // S'occuper avec le caissier
                 fprintf(stderr,"Le client %d va à la caisse.\n",num_client);
-
+                dprintf(fic_log,"Le client %d va à la caisse.\n",num_client);
+                
                 stop = 1;
             }
 
         }
     }
-
+    
+    close(fic_log);
     exit(EXIT_SUCCESS);
 }
