@@ -168,7 +168,7 @@ int main(int argc, char* argv[]){
     shm_ptr->SimulationActive = 1;
     
     //Creation l'ensemble de semaphore
-    int sem_id = semget(key, 10, IPC_CREAT | 0666);
+    int sem_id = semget(key, 5, IPC_CREAT | 0666);
     if(sem_id < -1){
         perror("erreur semget 136"); 
         exit(EXIT_FAILURE);
