@@ -65,7 +65,7 @@ int main(int argc, char* argv[]){
     sigemptyset(&sa2.sa_mask);
     sa2.sa_flags = 0;
 
-    srand(time(NULL));
+    srand(time(NULL) ^ getpid());
 
     //fprintf(stderr,"Debut vendeur.c : <nombre vendeurs : %d > <nombre caissiers : %d > <nombre clients : %d > <num vendeur : %d > <clef file de message : %d > \n",atoi(argv[1]),atoi(argv[2]),atoi(argv[3]),atoi(argv[4]),atoi(argv[5]));
     
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
-    //P(sem_id,SEM_VENDEURS);
+    P(sem_id,SEM_VENDEURS);
     if (shm_ptr->nb_rayon_inoccupe > 0){
         x = rand() % shm_ptr->nb_rayon_inoccupe;
         shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise = shm_ptr->tab_rayon_inoccupe[x];
@@ -112,7 +112,7 @@ int main(int argc, char* argv[]){
             shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise = rand() % NB_RAYON;  // 0 à NB_RAYON - 1
         }
     }
-    //V(sem_id,SEM_VENDEURS);
+    V(sem_id,SEM_VENDEURS);
 
 
     if (sigaction(SIGUSR2, &sa2, NULL) < 0) {

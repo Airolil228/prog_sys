@@ -71,6 +71,7 @@ int main(int argc, char* argv[]){
     }
     int i,j; //int attente;
     int fic_log;
+    pid_t pid; // Pour le waitpid
 
     if( ( fic_log = open("log.txt", O_WRONLY | O_CREAT | O_APPEND | O_TRUNC, 0666)) == -1 ){
         fprintf(stdout,"Erreur lors de l'ouverture du fichier\n");
@@ -132,7 +133,7 @@ int main(int argc, char* argv[]){
 
     if(nb_vendeurs < NB_RAYON){
         fprintf(stderr,"nombre_vendeurs > nombre de rayon : %d \n",NB_RAYON);
-        dprintf(stderr,"nombre_vendeurs > nombre de rayon : %d \n",NB_RAYON);
+        dprintf(fic_log,"nombre_vendeurs > nombre de rayon : %d \n",NB_RAYON);
         
         usage(argv[0]);
     }
@@ -317,11 +318,19 @@ int main(int argc, char* argv[]){
     fprintf(stderr,"Attente (robuste) de leur terminaison \n");
     dprintf(fic_log,"Attente (robuste) de leur terminaison \n");
     for (i = 0; i < shm_ptr->nb_clients; i++) {
-        waitpid(l.tab_clients[i], NULL, 0);
+
+        pid = l.tab_clients[i];
+
+        if (pid <= 0) {
+            fprintf(stderr, "PID client[%d] invalide (%d)\n", i, pid);
+            continue;
+        }
+
+        waitpid(pid, NULL, 0);
     }
     fprintf(stderr,"\n");
 
-
+    sleep(2);
 
     fprintf(stderr," Attente de la commande : kill %d \npour terminer \n\n", getpid());
     if (sigaction(SIGTERM, &sa, NULL) < 0) {

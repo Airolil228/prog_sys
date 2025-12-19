@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
 
-    srand(time(NULL));
+    srand(time(NULL) ^ getpid());
 
     int num_rayon = rand() % NB_RAYON; // Entre 0 et 9 
 
