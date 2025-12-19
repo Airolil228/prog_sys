@@ -127,6 +127,7 @@ int main(int argc, char* argv[]){
         reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), VENDEUR_BASE + num_vendeur, 0);
         
         if (reception == -1){
+            if (errno == EINTR) continue; // signal → on reprend
             fprintf(stderr,"Erreur msgrcv (coté vendeur), Ligne %d (reception de la requete du client) \n", __LINE__);
             perror("msgrcv");
             break;
@@ -183,6 +184,7 @@ int main(int argc, char* argv[]){
             reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), VENDEUR_DISCUSSION_BASE + num_vendeur, 0);
 
             if (reception == -1){
+                if (errno == EINTR) continue; // signal → on reprend
                 fprintf(stderr,"Erreur msgrcv (coté serveur), Ligne %d (attente de la décision du client) \n", __LINE__);
                 perror("msgrcv");
                 exit(EXIT_FAILURE);

@@ -344,15 +344,19 @@ int main(int argc, char* argv[]){
     // Avertir vendeurs et caissiers qu'ils peuvent terminer proprement
 
     // Détruire les IPCs
-    for (j=0; j<shm_ptr->nb_clients;j++){
-        kill(l.tab_clients[j], SIGUSR2);
-    }
     for (j=0; j<shm_ptr->nb_vendeurs;j++){
         kill(l.tab_vendeurs[j], SIGUSR2);
     }
     for (j=0; j<shm_ptr->nb_caissiers;j++){
         kill(l.tab_caissiers[j], SIGUSR2);
     }
+
+    // attendre vendeurs / caissiers
+    for (j=0; j<shm_ptr->nb_vendeurs; j++)
+        waitpid(l.tab_vendeurs[j], NULL, 0);
+
+    for (j=0; j<shm_ptr->nb_caissiers; j++)
+        waitpid(l.tab_caissiers[j], NULL, 0);
 
     fonc_dest(shm_ptr,shmid,msgid,sem_id); 
     close(fic_log);

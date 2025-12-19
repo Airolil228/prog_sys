@@ -111,6 +111,7 @@ int main(int argc, char* argv[]){
         reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_DISCUSSION_BASE + num_client, 0);
         
         if (reception == -1){
+            if (errno == EINTR) continue; // signal → on reprend
             fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Premiere reponse vendeur : specialisation du rayon) \n");
             perror("msgrcv");
             exit(EXIT_FAILURE);
@@ -145,6 +146,7 @@ int main(int argc, char* argv[]){
 
             if (envoi == -1){
                 fprintf(stderr,"Erreur msgsnd (coté client), Ligne %d (Rendu de la décision du client) \n", __LINE__);
+                dprintf(fic_log,"Erreur msgsnd (coté client), Ligne %d (Rendu de la décision du client) \n", __LINE__);
                 perror("msgsnd");
                 exit(EXIT_FAILURE);
             }
@@ -177,6 +179,7 @@ int main(int argc, char* argv[]){
                 reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_DISCUSSION_BASE + num_client, 0);
                 
                 if (reception == -1){
+                    if (errno == EINTR) continue; // signal → on reprend
                     fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Premiere reponse caissier : prix) \n");
                     dprintf(fic_log,"Erreur msgrcv (coté client), Ligne 79 (Premiere reponse caissier : prix) \n");
                     perror("msgrcv");
@@ -188,6 +191,7 @@ int main(int argc, char* argv[]){
                 reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), CLIENT_DISCUSSION_BASE + num_client, 0);
                 
                 if (reception == -1){
+                    if (errno == EINTR) continue; // signal → on reprend
                     fprintf(stderr,"Erreur msgrcv (coté client), Ligne 79 (Le caissier conclu l'achat) \n");
                     dprintf(fic_log,"Erreur msgrcv (coté client), Ligne 79 (Le caissier conclu l'achat) \n");
                     perror("msgrcv");

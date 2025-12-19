@@ -1,85 +1,528 @@
-Vendeur créé : 32873 
-Vendeur créé : 32874 
-Vendeur créé : 32875 
-Vendeur créé : 32876 
-Vendeur créé : 32877 
-Vendeur créé : 32878 
-Vendeur créé : 32879 
-Vendeur créé : 32880 
-Vendeur créé : 32881 
-Vendeur créé : 32882 
-Caissier créé : 32883 
-Caissier créé : 32884 
-Caissier créé : 32885 
-Client créé : 32886 
-Client créé : 32887 
-Client créé : 32888 
-Client créé : 32889 
-Client créé : 32890 
-Client créé : 32892 
-Client créé : 32891 
-Client créé : 32893 
-Client créé : 32894 
-Client créé : 32896 
-Client créé : 32895 
-Client créé : 32897 
-Client créé : 32898 
-Client créé : 32899 
-Client créé : 32900 
-Client créé : 32901 
-Client créé : 32904 
-Client créé : 32905 
-Client créé : 32902 
-Client créé : 32903 
-Ligne 94 :Le client 1 veut acheter au rayon 2 au près du vendeur 8 
-Ligne 94 :Le client 0 veut acheter au rayon 9 au près du vendeur 0 
-Ligne 94 :Le client 2 veut acheter au rayon 3 au près du vendeur 8 
-Ligne 94 :Le client 15 veut acheter au rayon 4 au près du vendeur 7 
-Ligne 94 :Le client 19 veut acheter au rayon 2 au près du vendeur 6 
-Ligne 94 :Le client 8 veut acheter au rayon 5 au près du vendeur 5 
-Ligne 94 :Le client 5 veut acheter au rayon 0 au près du vendeur 7 
-Ligne 94 :Le client 12 veut acheter au rayon 7 au près du vendeur 8 
-Ligne 94 :Le client 14 veut acheter au rayon 1 au près du vendeur 9 
-Ligne 126 : Le vendeur 6 attend une requete d'un client 
-Caissier 0 attend un client...
-Ligne 94 :Le client 9 veut acheter au rayon 8 au près du vendeur 3 
-Ligne 126 : Le vendeur 8 attend une requete d'un client 
-Ligne 94 :Le client 7 veut acheter au rayon 4 au près du vendeur 5 
-Ligne 126 : Le vendeur 4 attend une requete d'un client 
-Ligne 94 :Le client 3 veut acheter au rayon 6 au près du vendeur 9 
-Ligne 94 :Le client 18 veut acheter au rayon 9 au près du vendeur 5 
-Ligne 126 : Le vendeur 7 attend une requete d'un client 
-Ligne 94 :Le client 10 veut acheter au rayon 3 au près du vendeur 0 
-Ligne 94 :Le client 13 veut acheter au rayon 0 au près du vendeur 9 
-Caissier 2 attend un client...
-Ligne 94 :Le client 17 veut acheter au rayon 8 au près du vendeur 8 
-Ligne 137 : Le vendeur 4 recoit une requete du client 17 
-Caissier 1 attend un client...
-Ligne 126 : Le vendeur 2 attend une requete d'un client 
-Ligne 94 :Le client 11 veut acheter au rayon 6 au près du vendeur 1 
-Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Vendeur créé : 34820 
+Vendeur créé : 34821 
+Vendeur créé : 34822 
+Vendeur créé : 34823 
+Vendeur créé : 34824 
+Vendeur créé : 34825 
+Vendeur créé : 34826 
+Vendeur créé : 34827 
+Vendeur créé : 34828 
+Vendeur créé : 34829 
+Caissier créé : 34830 
+Caissier créé : 34831 
+Caissier créé : 34832 
+Caissier créé : 34833 
+Caissier créé : 34834 
+Client créé : 34835 
+Client créé : 34836 
+Client créé : 34837 
+Client créé : 34838 
+Client créé : 34839 
+Client créé : 34840 
+Client créé : 34841 
+Client créé : 34842 
+Client créé : 34843 
+Client créé : 34844 
+Client créé : 34845 
+Client créé : 34846 
+Client créé : 34847 
+Client créé : 34848 
+Client créé : 34849 
+Ligne 94 :Le client 3 veut acheter au rayon 9 au près du vendeur 7 
 Ligne 126 : Le vendeur 0 attend une requete d'un client 
-Ligne 94 :Le client 4 veut acheter au rayon 7 au près du vendeur 6 
-Ligne 137 : Le vendeur 2 recoit une requete du client 43 
-Ligne 137 : Le vendeur 0 recoit une requete du client 0 
-Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
 Ligne 126 : Le vendeur 3 attend une requete d'un client 
-Ligne 137 : Le vendeur 8 recoit une requete du client 1 
 Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 94 :Le client 1 veut acheter au rayon 3 au près du vendeur 5 
+Ligne 138 : Le vendeur 7 recoit une requete du client 3 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 94 :Le client 7 veut acheter au rayon 7 au près du vendeur 6 
+Ligne 138 : Le vendeur 5 recoit une requete du client 1 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 138 : Le vendeur 6 recoit une requete du client 7 
+Caissier 0 attend un client...
+Caissier 2 attend un client...
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 3 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 6 
+Ligne 94 :Le client 4 veut acheter au rayon 2 au près du vendeur 8 
+Caissier 1 attend un client...
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 7 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 5 
+Caissier 4 attend un client...
+Caissier 3 attend un client...
+Ligne 138 : Le vendeur 3 recoit une requete du client 12 
+Ligne 94 :Le client 5 veut acheter au rayon 1 au près du vendeur 4 
+Ligne 94 :Le client 0 veut acheter au rayon 4 au près du vendeur 2 
+Ligne 94 :Le client 11 veut acheter au rayon 5 au près du vendeur 2 
+Ligne 94 :Le client 14 veut acheter au rayon 2 au près du vendeur 7 
+Ligne 138 : Le vendeur 4 recoit une requete du client 5 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 138 : Le vendeur 6 recoit une requete du client 2 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 0 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 4 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 7 
+Ligne 138 : Le vendeur 2 recoit une requete du client 0 
+Ligne 138 : Le vendeur 8 recoit une requete du client 4 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 4 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 90 : Le client 4 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 1 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 7 
+Ligne 138 : Le vendeur 1 recoit une requete du client 10 
+Ligne 138 : Le vendeur 4 recoit une requete du client 12 
+Ligne 90 : Le client 1 change de vendeur, il va vers : 6 
+Ligne 90 : Le client 5 change de vendeur, il va vers : 5 
+Ligne 94 :Le client 5 veut acheter au rayon 1 au près du vendeur 5 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 90 : Le client 7 change de vendeur, il va vers : 7 
+Ligne 94 :Le client 1 veut acheter au rayon 3 au près du vendeur 6 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 2 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 2 
+Ligne 138 : Le vendeur 6 recoit une requete du client 1 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 5 
 Ligne 126 : Le vendeur 2 attend une requete d'un client 
-Ligne 137 : Le vendeur 5 recoit une requete du client 40 
-Ligne 126 : Le vendeur 1 attend une requete d'un client 
-Ligne 94 :Le client 6 veut acheter au rayon 1 au près du vendeur 4 
-Ligne 137 : Le vendeur 2 recoit une requete du client 6 
-Ligne 137 : Le vendeur 6 recoit une requete du client 19 
-Ligne 94 :Le client 16 veut acheter au rayon 5 au près du vendeur 7 
-Ligne 90 : Le client 10 change de vendeur, il va vers : 5 
-Ligne 94 :Le client 10 veut acheter au rayon 3 au près du vendeur 5 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 94 :Le client 7 veut acheter au rayon 7 au près du vendeur 7 
+Ligne 94 :Le client 4 veut acheter au rayon 2 au près du vendeur 9 
+Ligne 138 : Le vendeur 5 recoit une requete du client 6 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 5 
+Ligne 138 : Le vendeur 0 recoit une requete du client 9 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 9 
 Ligne 126 : Le vendeur 0 attend une requete d'un client 
-Ligne 137 : Le vendeur 0 recoit une requete du client 0 
-Ligne 90 : Le client 0 change de vendeur, il va vers : 1 
-Ligne 94 :Le client 0 veut acheter au rayon 9 au près du vendeur 1 
-Ligne 137 : Le vendeur 1 recoit une requete du client 47 
+Ligne 90 : Le client 0 change de vendeur, il va vers : 3 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 6 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 6 
+Ligne 138 : Le vendeur 9 recoit une requete du client 4 
+Ligne 138 : Le vendeur 5 recoit une requete du client 5 
+Ligne 138 : Le vendeur 2 recoit une requete du client 11 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Ligne 94 :Le client 0 veut acheter au rayon 4 au près du vendeur 3 
+Ligne 90 : Le client 1 change de vendeur, il va vers : 7 
+Ligne 90 : Le client 4 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 4 veut acheter au rayon 2 au près du vendeur 0 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 138 : Le vendeur 5 recoit une requete du client 12 
+Ligne 90 : Le client 5 change de vendeur, il va vers : 6 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 94 :Le client 1 veut acheter au rayon 3 au près du vendeur 7 
+Ligne 138 : Le vendeur 3 recoit une requete du client 0 
+Ligne 138 : Le vendeur 0 recoit une requete du client 4 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 90 : Le client 9 change de vendeur, il va vers : 1 
+Ligne 138 : Le vendeur 9 recoit une requete du client 13 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 138 : Le vendeur 2 recoit une requete du client 10 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 0 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 3 
+Ligne 94 :Le client 5 veut acheter au rayon 1 au près du vendeur 6 
+Ligne 90 : Le client 11 change de vendeur, il va vers : 3 
+Ligne 94 :Le client 11 veut acheter au rayon 5 au près du vendeur 3 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 1 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 6 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 6 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 3 
+Ligne 138 : Le vendeur 1 recoit une requete du client 9 
 Ligne 126 : Le vendeur 1 attend une requete d'un client 
-Ligne 137 : Le vendeur 1 recoit une requete du client 1 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 138 : Le vendeur 6 recoit une requete du client 6 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 138 : Le vendeur 6 recoit une requete du client 5 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 138 : Le vendeur 6 recoit une requete du client 12 
+Ligne 90 : Le client 5 change de vendeur, il va vers : 7 
+Ligne 94 :Le client 5 veut acheter au rayon 1 au près du vendeur 7 
+Ligne 90 : Le client 9 change de vendeur, il va vers : 2 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 7 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 7 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 7 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 7 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 2 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 138 : Le vendeur 2 recoit une requete du client 9 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Ligne 90 : Le client 9 change de vendeur, il va vers : 3 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 3 
+Ligne 94 : Le client 3 a trouvé le bon vendeur : 7 
+Ligne 122 : Le client 3 va à la caisse.
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Caissier 0: Client 3 doit payer 88...
+Ligne 138 : Le vendeur 7 recoit une requete du client 8 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 14 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 2 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 7 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 8 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 8 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 8 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 8 recoit une requete du client 8 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 90 : Le client 14 change de vendeur, il va vers : 8 
+Ligne 138 : Le vendeur 7 recoit une requete du client 1 
+Ligne 90 : Le client 7 change de vendeur, il va vers : 8 
+Ligne 94 :Le client 14 veut acheter au rayon 2 au près du vendeur 8 
+Ligne 90 : Le client 1 change de vendeur, il va vers : 8 
+Ligne 94 :Le client 1 veut acheter au rayon 3 au près du vendeur 8 
+Ligne 138 : Le vendeur 8 recoit une requete du client 14 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 138 : Le vendeur 8 recoit une requete du client 1 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 90 : Le client 14 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 14 veut acheter au rayon 2 au près du vendeur 9 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 9 
+Ligne 94 :Le client 7 veut acheter au rayon 7 au près du vendeur 8 
+Ligne 138 : Le vendeur 7 recoit une requete du client 5 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 6 
+Ligne 138 : Le vendeur 8 recoit une requete du client 7 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 12 
+Ligne 90 : Le client 1 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 1 veut acheter au rayon 3 au près du vendeur 9 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 8 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 8 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 8 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 90 : Le client 5 change de vendeur, il va vers : 8 
+Ligne 90 : Le client 7 change de vendeur, il va vers : 9 
+Ligne 138 : Le vendeur 9 recoit une requete du client 14 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 8 
+Ligne 90 : Le client 14 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 14 veut acheter au rayon 2 au près du vendeur 0 
+Ligne 94 :Le client 5 veut acheter au rayon 1 au près du vendeur 8 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 138 : Le vendeur 9 recoit une requete du client 8 
+Ligne 94 :Le client 7 veut acheter au rayon 7 au près du vendeur 9 
+Ligne 138 : Le vendeur 8 recoit une requete du client 2 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 8 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 0 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 138 : Le vendeur 8 recoit une requete du client 5 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 9 
+Ligne 138 : Le vendeur 9 recoit une requete du client 1 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 138 : Le vendeur 9 recoit une requete du client 7 
+Ligne 90 : Le client 1 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 1 veut acheter au rayon 3 au près du vendeur 0 
 Attente (robuste) de leur terminaison 
+Ligne 94 : Le client 7 a trouvé le bon vendeur : 9 
+Ligne 122 : Le client 7 va à la caisse.
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Caissier 1: Client 7 doit payer 95...
+Ligne 138 : Le vendeur 9 recoit une requete du client 2 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 0 
+Caissier 0 a terminé avec le client 3
+Le client 3 fini, il a acheté 88 dihram au rayon 9.
+Caissier 0 attend un client...
+Ligne 94 :Le client 3 veut acheter au rayon 9 au près du vendeur 7 
+Ligne 138 : Le vendeur 7 recoit une requete du client 3 
+Ligne 94 : Le client 4 a trouvé le bon vendeur : 0 
+Ligne 118 : Le client 4 refuse l'achat, et pars
+Fin du client 34839 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 138 : Le vendeur 0 recoit une requete du client 13 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 138 : Le vendeur 0 recoit une requete du client 14 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 1 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 1 
+Ligne 138 : Le vendeur 1 recoit une requete du client 13 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 2 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 2 
+Ligne 138 : Le vendeur 2 recoit une requete du client 13 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 3 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 3 
+Ligne 94 : Le client 0 a trouvé le bon vendeur : 3 
+Ligne 118 : Le client 0 refuse l'achat, et pars
+Fin du client 34835 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 138 : Le vendeur 3 recoit une requete du client 11 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 138 : Le vendeur 3 recoit une requete du client 10 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 138 : Le vendeur 3 recoit une requete du client 9 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 138 : Le vendeur 3 recoit une requete du client 13 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 4 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 4 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 4 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 4 
+Ligne 90 : Le client 9 change de vendeur, il va vers : 4 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 4 
+Ligne 90 : Le client 11 change de vendeur, il va vers : 4 
+Ligne 94 :Le client 11 veut acheter au rayon 5 au près du vendeur 4 
+Ligne 138 : Le vendeur 4 recoit une requete du client 10 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 138 : Le vendeur 4 recoit une requete du client 13 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 5 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 5 
+Ligne 138 : Le vendeur 4 recoit une requete du client 9 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 138 : Le vendeur 4 recoit une requete du client 11 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 5 
+Ligne 138 : Le vendeur 5 recoit une requete du client 10 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 90 : Le client 9 change de vendeur, il va vers : 5 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 5 
+Ligne 138 : Le vendeur 5 recoit une requete du client 13 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 5 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 6 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 6 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 6 
+Ligne 138 : Le vendeur 5 recoit une requete du client 9 
+Ligne 138 : Le vendeur 6 recoit une requete du client 10 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 7 
+Ligne 90 : Le client 9 change de vendeur, il va vers : 6 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 6 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 7 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 6 
+Ligne 138 : Le vendeur 6 recoit une requete du client 9 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 138 : Le vendeur 6 recoit une requete du client 13 
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Ligne 90 : Le client 9 change de vendeur, il va vers : 7 
+Ligne 94 :Le client 9 veut acheter au rayon 9 au près du vendeur 7 
+Ligne 90 : Le client 13 change de vendeur, il va vers : 7 
+Ligne 94 :Le client 13 veut acheter au rayon 9 au près du vendeur 7 
+Ligne 94 : Le client 5 a trouvé le bon vendeur : 8 
+Ligne 118 : Le client 5 refuse l'achat, et pars
+Fin du client 34840 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 138 : Le vendeur 8 recoit une requete du client 6 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 138 : Le vendeur 8 recoit une requete du client 12 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 9 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 9 
+Ligne 138 : Le vendeur 9 recoit une requete du client 6 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 138 : Le vendeur 9 recoit une requete du client 12 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 0 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 0 
+Ligne 94 : Le client 3 a trouvé le bon vendeur : 7 
+Ligne 122 : Le client 3 va à la caisse.
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 10 
+Caissier 0: Client 3 doit payer 56...
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 9 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 8 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 8 
+Ligne 138 : Le vendeur 8 recoit une requete du client 10 
+Ligne 126 : Le vendeur 8 attend une requete d'un client 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 9 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 9 
+Ligne 138 : Le vendeur 9 recoit une requete du client 10 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 90 : Le client 10 change de vendeur, il va vers : 0 
+Ligne 94 :Le client 10 veut acheter au rayon 2 au près du vendeur 0 
+Caissier 0 a terminé avec le client 3
+Caissier 0 attend un client...
+Le client 3 fini, il a acheté 56 dihram au rayon 9.
+Ligne 94 :Le client 3 veut acheter au rayon 9 au près du vendeur 7 
+Caissier 1 a terminé avec le client 7
+Caissier 1 attend un client...
+Le client 7 fini, il a acheté 95 dihram au rayon 7.
+Ligne 94 :Le client 7 veut acheter au rayon 7 au près du vendeur 9 
+Ligne 138 : Le vendeur 9 recoit une requete du client 7 
+Ligne 94 : Le client 11 a trouvé le bon vendeur : 4 
+Ligne 94 : Le client 14 a trouvé le bon vendeur : 0 
+Ligne 122 : Le client 14 va à la caisse.
+Ligne 122 : Le client 11 va à la caisse.
+Caissier 0: Client 11 doit payer 28...
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 138 : Le vendeur 0 recoit une requete du client 8 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 138 : Le vendeur 0 recoit une requete du client 1 
+Caissier 4: Client 14 doit payer 64...
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 138 : Le vendeur 0 recoit une requete du client 2 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 1 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 1 
+Ligne 138 : Le vendeur 0 recoit une requete du client 6 
+Ligne 138 : Le vendeur 1 recoit une requete du client 2 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 2 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 1 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 1 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 1 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 1 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 2 
+Ligne 138 : Le vendeur 1 recoit une requete du client 8 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 138 : Le vendeur 0 recoit une requete du client 12 
+Ligne 90 : Le client 1 change de vendeur, il va vers : 1 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 138 : Le vendeur 0 recoit une requete du client 10 
+Ligne 138 : Le vendeur 1 recoit une requete du client 6 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 1 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 138 : Le vendeur 2 recoit une requete du client 2 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 2 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 1 
+Ligne 94 :Le client 1 veut acheter au rayon 3 au près du vendeur 1 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 2 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 2 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 3 
+Ligne 138 : Le vendeur 1 recoit une requete du client 12 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 138 : Le vendeur 1 recoit une requete du client 1 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 2 
+Ligne 90 : Le client 12 change de vendeur, il va vers : 2 
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 2 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 3 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Ligne 138 : Le vendeur 2 recoit une requete du client 8 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 3 
+Ligne 138 : Le vendeur 2 recoit une requete du client 6 
+Ligne 138 : Le vendeur 3 recoit une requete du client 2 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 4 
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Ligne 138 : Le vendeur 2 recoit une requete du client 12 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 3 
+Ligne 138 : Le vendeur 3 recoit une requete du client 8 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 4 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Ligne 90 : Le client 6 change de vendeur, il va vers : 3 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 4 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 4 
+Ligne 138 : Le vendeur 4 recoit une requete du client 2 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 90 : Le client 2 change de vendeur, il va vers : 5 
+Ligne 94 :Le client 2 veut acheter au rayon 6 au près du vendeur 5 
+Ligne 94 :Le client 6 veut acheter au rayon 4 au près du vendeur 3 
+Ligne 138 : Le vendeur 5 recoit une requete du client 2 
+Ligne 138 : Le vendeur 3 recoit une requete du client 6 
+Ligne 138 : Le vendeur 4 recoit une requete du client 8 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 5 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 5 
+Ligne 94 : Le client 9 a trouvé le bon vendeur : 7 
+Ligne 118 : Le client 9 refuse l'achat, et pars
+Fin du client 34844 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 13 
+Ligne 94 : Le client 7 a trouvé le bon vendeur : 9 
+Ligne 118 : Le client 7 refuse l'achat, et pars
+Fin du client 34842 
+Ligne 126 : Le vendeur 9 attend une requete d'un client 
+Ligne 94 : Le client 12 a trouvé le bon vendeur : 2 
+Ligne 122 : Le client 12 va à la caisse.
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Caissier 1: Client 12 doit payer 58...
+Ligne 94 : Le client 13 a trouvé le bon vendeur : 7 
+Ligne 118 : Le client 13 refuse l'achat, et pars
+Fin du client 34848 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 138 : Le vendeur 7 recoit une requete du client 3 
+Caissier 4 a terminé avec le client 14
+Le client 14 fini, il a acheté 64 dihram au rayon 2.
+Ligne 94 :Le client 14 veut acheter au rayon 2 au près du vendeur 0 
+Caissier 4 attend un client...
+Ligne 94 : Le client 10 a trouvé le bon vendeur : 0 
+Ligne 118 : Le client 10 refuse l'achat, et pars
+Fin du client 34845 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 94 : Le client 1 a trouvé le bon vendeur : 1 
+Ligne 118 : Le client 1 refuse l'achat, et pars
+Fin du client 34836 
+Ligne 138 : Le vendeur 0 recoit une requete du client 14 
+Ligne 126 : Le vendeur 1 attend une requete d'un client 
+Ligne 94 : Le client 2 a trouvé le bon vendeur : 5 
+Ligne 118 : Le client 2 refuse l'achat, et pars
+Fin du client 34837 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 138 : Le vendeur 5 recoit une requete du client 8 
+Ligne 126 : Le vendeur 5 attend une requete d'un client 
+Ligne 90 : Le client 8 change de vendeur, il va vers : 6 
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 6 
+Ligne 138 : Le vendeur 6 recoit une requete du client 8 
+Ligne 94 : Le client 6 a trouvé le bon vendeur : 3 
+Ligne 118 : Le client 6 refuse l'achat, et pars
+Fin du client 34841 
+Ligne 126 : Le vendeur 3 attend une requete d'un client 
+Caissier 0 a terminé avec le client 11
+Le client 11 fini, il a acheté 28 dihram au rayon 5.
+Caissier 0 attend un client...
+Ligne 94 :Le client 11 veut acheter au rayon 5 au près du vendeur 4 
+Ligne 138 : Le vendeur 4 recoit une requete du client 11 
+Ligne 94 : Le client 8 a trouvé le bon vendeur : 6 
+Ligne 122 : Le client 8 va à la caisse.
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Caissier 2: Client 8 doit payer 80...
+Ligne 94 : Le client 11 a trouvé le bon vendeur : 4 
+Ligne 118 : Le client 11 refuse l'achat, et pars
+Fin du client 34846 
+Caissier 1 a terminé avec le client 12
+Le client 12 fini, il a acheté 58 dihram au rayon 8.
+Ligne 94 :Le client 12 veut acheter au rayon 8 au près du vendeur 2 
+Ligne 126 : Le vendeur 4 attend une requete d'un client 
+Caissier 1 attend un client...
+Ligne 138 : Le vendeur 2 recoit une requete du client 12 
+Ligne 94 : Le client 3 a trouvé le bon vendeur : 7 
+Ligne 118 : Le client 3 refuse l'achat, et pars
+Fin du client 34838 
+Ligne 126 : Le vendeur 7 attend une requete d'un client 
+Ligne 94 : Le client 14 a trouvé le bon vendeur : 0 
+Ligne 118 : Le client 14 refuse l'achat, et pars
+Fin du client 34849 
+Ligne 126 : Le vendeur 0 attend une requete d'un client 
+Ligne 94 : Le client 12 a trouvé le bon vendeur : 2 
+Ligne 118 : Le client 12 refuse l'achat, et pars
+Ligne 126 : Le vendeur 2 attend une requete d'un client 
+Fin du client 34847 
+Caissier 2 a terminé avec le client 8
+Le client 8 fini, il a acheté 80 dihram au rayon 0.
+Caissier 2 attend un client...
+Ligne 94 :Le client 8 veut acheter au rayon 0 au près du vendeur 6 
+Ligne 138 : Le vendeur 6 recoit une requete du client 8 
+Ligne 94 : Le client 8 a trouvé le bon vendeur : 6 
+Ligne 118 : Le client 8 refuse l'achat, et pars
+Ligne 126 : Le vendeur 6 attend une requete d'un client 
+Fin du client 34843 
+Caissier 1: Client 12 doit payer 58...
+Caissier 0: Client 11 doit payer 28...
+Caissier 3: Client -1759730088 doit payer 79523232...
+Caissier 4: Client 14 doit payer 64...
+Caissier 2: Client 8 doit payer 80...
+Caissier 1 a terminé avec le client 12
+Caissier 0 a terminé avec le client 11
+Caissier 4 a terminé avec le client 14
+Caissier 2 a terminé avec le client 8
