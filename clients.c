@@ -27,7 +27,6 @@ int main(int argc, char* argv[]){
     struct message msg;
     ssize_t reception;
     int envoi;
-    int stop = 1;
 
     struct sigaction sa;
 
@@ -55,7 +54,7 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
-    while (!sigusr2recu && stop){
+    while (!sigusr2recu){
         msg.vendeur_reco = 0;
         msg.decision = 0;
         msg.montant = 0;
@@ -107,7 +106,7 @@ int main(int argc, char* argv[]){
             }else{
                 msg.decision = 0;
             }
-            msg.mtype = VENDEUR_DISCUSSION_BASE + num_client;
+            msg.mtype = VENDEUR_DISCUSSION_BASE + num_vendeur;
             envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
 
             if (envoi == -1){
@@ -115,14 +114,15 @@ int main(int argc, char* argv[]){
                 exit(EXIT_FAILURE);
             }
 
+
             if (msg.decision == 0){
                 fprintf(stderr,"Ligne 118 : Le client %d refuse l'achat, et pars\n",num_client);
-                stop = 0; // abandon
+                break; // abandon
             }else{
                 // S'occuper avec le caissier
                 fprintf(stderr,"Ligne 122 : Le client %d va à la caisse.\n",num_client);
 
-                stop = 0; // va a la caisse
+                break; // va a la caisse
             }
 
         }

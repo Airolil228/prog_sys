@@ -1,7 +1,6 @@
 #include "librairies.h"
 
 int sigtermrecu = 0; 
-magasin m;
 
 void arret(int sig){
     printf("signal %d (TERM) reçu (Initial) \n", sig); 
@@ -14,6 +13,11 @@ void debut(int sig){
     printf("Le signal %d commence (dans Initial.c) \n", sig); 
     sigusr1recu++;
 }
+
+void initial_sigusr1(int sig){
+    
+}
+
 
 void usage(char * appel){
     fprintf(stdout,"Usage : %s <nombre vendeurs> <nombre caissiers> <nombre clients> \n", appel);
@@ -28,35 +32,35 @@ void fonc_dest(magasin *shm_ptr,int shmid,int msgid,int sem_id){
     msgctl(msgid, IPC_RMID, NULL);// Destruction file de message
 }
 
-void init_struct(int nbVend,int nbCaisse){
+void init_struct(magasin* shm_ptr,int nbVend,int nbCaisse){
     int i;
-    m.nb_rayon_inoccupe = NB_RAYON;
+    shm_ptr->nb_rayon_inoccupe = NB_RAYON;
     for (i=0;i<NB_RAYON;i++){
-        m.tab_rayon_inoccupe[i] = i;
+        shm_ptr->tab_rayon_inoccupe[i] = i;
     }
 
     // Init vendeurs
     for (i = 0; i < nbVend; i++){
-        m.tab_vendeurs[i].numero = i;
-        m.tab_vendeurs[i].nb_clients_attente = 0;
-        m.tab_vendeurs[i].client_actuel = -1; 
-        m.tab_vendeurs[i].etat = LIBRE; 
-        m.tab_vendeurs[i].pid = 0; // Initialisation du pid (recommandé)
+        shm_ptr->tab_vendeurs[i].numero = i;
+        shm_ptr->tab_vendeurs[i].nb_clients_attente = 0;
+        shm_ptr->tab_vendeurs[i].client_actuel = -1; 
+        shm_ptr->tab_vendeurs[i].etat = LIBRE; 
+        shm_ptr->tab_vendeurs[i].pid = 0; // Initialisation du pid (recommandé)
 
         if(i < NB_RAYON){
-            m.tab_vendeurs[i].rayon_expertise = i;
+            shm_ptr->tab_vendeurs[i].rayon_expertise = i;
         } else {
-            m.tab_vendeurs[i].rayon_expertise = rand() % NB_RAYON;
+            shm_ptr->tab_vendeurs[i].rayon_expertise = rand() % NB_RAYON;
         }
     }
 
     
     for (i = 0; i < nbCaisse; i++){
-        m.tab_caissiers[i].numero = i;  
-        m.tab_caissiers[i].nb_clients_attente = 0;  
-        m.tab_caissiers[i].client_actuel = -1; 
-        m.tab_caissiers[i].etat = LIBRE; 
-        m.tab_caissiers[i].pid = 0; 
+        shm_ptr->tab_caissiers[i].numero = i;  
+        shm_ptr->tab_caissiers[i].nb_clients_attente = 0;  
+        shm_ptr->tab_caissiers[i].client_actuel = -1; 
+        shm_ptr->tab_caissiers[i].etat = LIBRE; 
+        shm_ptr->tab_caissiers[i].pid = 0; 
     }
 }
 
@@ -66,9 +70,9 @@ int main(int argc, char* argv[]){
     }
     int i,j; int attente;
    
-    m.nb_vendeurs = atoi(argv[1]);
-    m.nb_caissiers = atoi(argv[2]);
-    m.nb_clients = atoi(argv[3])+1;
+    int nb_vendeurs = atoi(argv[1]);
+    int nb_caissiers = atoi(argv[2]);
+    int nb_clients = atoi(argv[3]);
 
     char num_creation[NB_CHAR_EXEC];
     char str_nb_vendeurs[NB_CHAR_EXEC];
@@ -79,6 +83,16 @@ int main(int argc, char* argv[]){
     int msgid;
     int shmid; // seg.mem.part CLIENT <=> VENDEUR et CLIENT <=> CASIER
     
+    struct sigaction sa_usr1;
+    sa_usr1.sa_handler = initial_sigusr1;
+    sigemptyset(&sa_usr1.sa_mask);
+    sa_usr1.sa_flags = 0;
+
+    if (sigaction(SIGUSR1, &sa_usr1, NULL) < 0) {
+        perror("sigaction SIGUSR1");
+        exit(EXIT_FAILURE);
+    }
+
 
     struct sigaction sa;
 
@@ -93,25 +107,31 @@ int main(int argc, char* argv[]){
     sa2.sa_flags = 0;
 
 
+    sigset_t mask;
+    sigemptyset(&mask);
+    sigaddset(&mask, SIGUSR1);
+    sigprocmask(SIG_BLOCK, &mask, NULL);
+
+
     // Initialisation des rayons inoccupés pour s'assurer qu'ils sont tous occupés
 
-    sprintf(str_nb_vendeurs,  "%d", m.nb_vendeurs);  // Conversion des entiers en chaînes de caractères
-    sprintf(str_nb_caissiers, "%d", m.nb_caissiers);
-    sprintf(str_nb_clients, "%d", m.nb_clients);
+    sprintf(str_nb_vendeurs,  "%d", nb_vendeurs);  // Conversion des entiers en chaînes de caractères
+    sprintf(str_nb_caissiers, "%d", nb_caissiers);
+    sprintf(str_nb_clients, "%d", nb_clients);
 
     // Créer processus vendeur, caissier et clients
 
-    if(m.nb_vendeurs < NB_RAYON){
+    if(nb_vendeurs < NB_RAYON){
         fprintf(stderr,"nombre_vendeurs > nombre de rayon : %d \n",NB_RAYON);
         usage(argv[0]);
     }
 
-    if(m.nb_caissiers < 1){
+    if(nb_caissiers < 1){
         fprintf(stderr,"usage : nombre_caissiers > 1 \n"); 
         usage(argv[0]);
     }
 
-    if(m.nb_clients < 1){
+    if(nb_clients < 1){
         fprintf(stderr,"usage : nombre_clients > 1 \n"); 
         usage(argv[0]);
     }
@@ -153,9 +173,9 @@ int main(int argc, char* argv[]){
 
     memset(shm_ptr, 0, sizeof(magasin));
 
-    shm_ptr->nb_vendeurs = m.nb_vendeurs;
-    shm_ptr->nb_caissiers = m.nb_caissiers;
-    shm_ptr->nb_clients = m.nb_clients;
+    shm_ptr->nb_vendeurs = atoi(argv[1]);
+    shm_ptr->nb_caissiers = atoi(argv[2]);
+    shm_ptr->nb_clients = atoi(argv[3]);
     shm_ptr->SimulationActive = 1;
     
     //Creation l'ensemble de semaphore
@@ -166,16 +186,16 @@ int main(int argc, char* argv[]){
     }
 
     //============================================== UTILISATION =================================== // 
-    init_struct(m.nb_vendeurs,m.nb_caissiers);
+    init_struct(shm_ptr,nb_vendeurs,nb_caissiers);
 
-    for (i=0; i<m.nb_vendeurs;i++){
+    for (i=0; i<shm_ptr->nb_vendeurs;i++){
 
-        m.tab_vendeurs[i].pid = fork();
+        shm_ptr->tab_vendeurs[i].pid = fork();
 
-        if( m.tab_vendeurs[i].pid < -1){
+        if( shm_ptr->tab_vendeurs[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");
             exit(EXIT_FAILURE);
-        }else if( m.tab_vendeurs[i].pid == 0 ){
+        }else if( shm_ptr->tab_vendeurs[i].pid == 0 ){
             printf("Vendeur créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
@@ -186,6 +206,9 @@ int main(int argc, char* argv[]){
                 perror("Erreur sigaction");
                 exit(1);
             }
+
+            sigprocmask(SIG_UNBLOCK, &mask, NULL);
+
             while (!sigusr1recu){
                 pause();
             }
@@ -200,13 +223,13 @@ int main(int argc, char* argv[]){
     }
     
 
-    for (i=0; i<m.nb_caissiers;i++){
-        m.tab_caissiers[i].pid = fork();
+    for (i=0; i< shm_ptr->nb_caissiers;i++){
+        shm_ptr->tab_caissiers[i].pid = fork();
 
-        if( m.tab_caissiers[i].pid < -1){
+        if( shm_ptr->tab_caissiers[i].pid < -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
-        }else if( m.tab_caissiers[i].pid == 0 ){
+        }else if( shm_ptr->tab_caissiers[i].pid == 0 ){
             printf("Caissier créé : %d \n", getpid());
             
             sprintf(num_creation, "%d", i);
@@ -217,6 +240,9 @@ int main(int argc, char* argv[]){
                 perror("Erreur sigaction");
                 exit(1);
             }
+
+            sigprocmask(SIG_UNBLOCK, &mask, NULL);
+
             while (!sigusr1recu){
                 pause();
             }
@@ -230,14 +256,14 @@ int main(int argc, char* argv[]){
         }
     }
 
-    for (i=0; i<m.nb_clients;i++){
+    for (i=0; i< shm_ptr->nb_clients;i++){
 
-        m.tab_clients[i].pid = fork();
+        shm_ptr->tab_clients[i].pid = fork();
 
-        if( m.tab_clients[i].pid == -1){
+        if( shm_ptr->tab_clients[i].pid == -1){
             fprintf(stderr,"Erreur de création de processus \n");  
             exit(EXIT_FAILURE);
-        }else if( m.tab_clients[i].pid == 0 ){
+        }else if( shm_ptr->tab_clients[i].pid == 0 ){
             printf("Client créé : %d \n", getpid());
 
             sprintf(num_creation, "%d", i);
@@ -248,6 +274,9 @@ int main(int argc, char* argv[]){
                 perror("Erreur sigaction");
                 exit(1);
             }
+
+            sigprocmask(SIG_UNBLOCK, &mask, NULL);
+
             while (!sigusr1recu){
                 pause();
             }
@@ -260,28 +289,25 @@ int main(int argc, char* argv[]){
         }
     }
 
+    sigprocmask(SIG_UNBLOCK, &mask, NULL);
+
+
     // Debuter tous
-    for (j=0; j<m.nb_clients;j++){
-        kill(m.tab_clients[j].pid, SIGUSR1);
+    for (j=0; j<shm_ptr->nb_clients;j++){
+        kill(shm_ptr->tab_clients[j].pid, SIGUSR1);
     }
-    for (j=0; j<m.nb_vendeurs;j++){
-        kill(m.tab_vendeurs[j].pid, SIGUSR1);
+    for (j=0; j<shm_ptr->nb_vendeurs;j++){
+        kill(shm_ptr->tab_vendeurs[j].pid, SIGUSR1);
     }
-    for (j=0; j<m.nb_caissiers;j++){
-        kill(m.tab_caissiers[j].pid, SIGUSR1);
+    for (j=0; j<shm_ptr->nb_caissiers;j++){
+        kill(shm_ptr->tab_caissiers[j].pid, SIGUSR1);
     }
 
 
     /* On attend la terrminaison : */
     fprintf(stderr,"Attente (robuste) de leur terminaison \n");
-    attente = 0;
-    while (attente < m.nb_clients){ 
-
-        if ((waitpid(m.tab_clients[attente].pid,NULL,0) == -1) && (errno == ECHILD)){
-            attente ++;
-        }else{
-            //fprintf(stderr,".");
-        }
+    for (i = 0; i < shm_ptr->nb_clients; i++) {
+        waitpid(shm_ptr->tab_clients[i].pid, NULL, 0);
     }
     fprintf(stderr,"\n");
 
@@ -302,14 +328,14 @@ int main(int argc, char* argv[]){
     // Avertir vendeurs et caissiers qu'ils peuvent terminer proprement
 
     // Détruire les IPCs
-    for (j=0; j<m.nb_clients;j++){
-        kill(m.tab_clients[j].pid, SIGUSR2);
+    for (j=0; j<shm_ptr->nb_clients;j++){
+        kill(shm_ptr->tab_clients[j].pid, SIGUSR2);
     }
-    for (j=0; j<m.nb_vendeurs;j++){
-        kill(m.tab_vendeurs[j].pid, SIGUSR2);
+    for (j=0; j<shm_ptr->nb_vendeurs;j++){
+        kill(shm_ptr->tab_vendeurs[j].pid, SIGUSR2);
     }
-    for (j=0; j<m.nb_caissiers;j++){
-        kill(m.tab_caissiers[j].pid, SIGUSR2);
+    for (j=0; j<shm_ptr->nb_caissiers;j++){
+        kill(shm_ptr->tab_caissiers[j].pid, SIGUSR2);
     }
 
     fonc_dest(shm_ptr,shmid,msgid,sem_id); 

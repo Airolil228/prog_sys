@@ -77,11 +77,11 @@ int main(int argc, char* argv[]){
         }
 
         //Mettre à jour l'état 
-        V(sem_id,SEM_CAISSIERS);
+        P(sem_id,SEM_CAISSIERS);
         shm_ptr->tab_caissiers[num_caissier].nb_clients_attente++;
         shm_ptr->tab_caissiers[num_caissier].etat = OCCUPE;
         shm_ptr->tab_caissiers[num_caissier].client_actuel = msg.client_id;
-        P(sem_id,SEM_CAISSIERS);
+        V(sem_id,SEM_CAISSIERS);
 
         //Récuperer le montant 
         int montant = msg.montant; 
@@ -91,7 +91,7 @@ int main(int argc, char* argv[]){
             montant);
 
         //Communiquer le prix au client 
-        msg.mtype = CLIENT_BASE + msg.client_id;
+        msg.mtype = CLIENT_DISCUSSION_BASE + msg.client_id;
         int envoi = msgsnd(msgid,&msg,sizeof(struct message) - sizeof(long),0);
 
         if(envoi == -1){

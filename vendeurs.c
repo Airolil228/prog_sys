@@ -64,6 +64,14 @@ int main(int argc, char* argv[]){
         return 1;
     }
 
+    //recupère le sémaphore
+    int sem_id = semget(key,1,0666);
+    if (sem_id == -1) {
+        perror("semget vendeur");
+        exit(1);
+    }
+
+    //P(sem_id,SEM_VENDEURS);
     if (shm_ptr->nb_rayon_inoccupe > 0){
         x = rand() % shm_ptr->nb_rayon_inoccupe;
         shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise = shm_ptr->tab_rayon_inoccupe[x];
@@ -76,6 +84,7 @@ int main(int argc, char* argv[]){
             shm_ptr->tab_vendeurs[num_vendeur].rayon_expertise = rand() % NB_RAYON;  // 0 à NB_RAYON - 1
         }
     }
+    //V(sem_id,SEM_VENDEURS);
 
 
     if (sigaction(SIGUSR2, &sa, NULL) < 0) {
@@ -138,7 +147,7 @@ int main(int argc, char* argv[]){
 
             // Décision du client :
             // Attendre la réponse msgrcv
-            reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), VENDEUR_DISCUSSION_BASE + msg.client_id, 0);
+            reception = msgrcv(msgid, &msg, sizeof(struct message) - sizeof(long), VENDEUR_DISCUSSION_BASE + num_vendeur, 0);
 
             if (reception == -1){
                 perror("Erreur msgrcv (coté serveur), Ligne 144 (attente de la décision du client)");
@@ -155,7 +164,7 @@ int main(int argc, char* argv[]){
                 msg.montant = rand() % (MONTANT_MAX - MONTANT_MIN + 1) + MONTANT_MIN;
                 // Envoyer aux caissiers
                 msg.mtype = 10000; // type commun pour les caissiers
-
+                msg.vendeur_reco = num_vendeur; // Permet de bien montrer qu'on reste avec le meme vendeur
                 envoi = msgsnd(msgid, &msg, sizeof(struct message) - sizeof(long),0);
                 shm_ptr->tab_vendeurs[num_vendeur].etat = LIBRE;
                     
