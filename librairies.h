@@ -83,4 +83,4 @@ struct msgbuf {
     int type_message;    // REPONSE/DEMANDE 
 };
 
-struct sigaction action;:
+struct sigaction action;
